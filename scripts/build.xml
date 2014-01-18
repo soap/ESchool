@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="j_component_build" basedir="." default="all">
+ 		<!-- 
+ 		Created by Prasit Gebsaap
+        Last Update: 2013-09-15 12:17
+ 		Improvments are welcome! ;)
+ 		PHING buld file for creating component for Joomla 2.5
+        
+ 		Change list:
+           project name (above) for your component name without com_
+           pack.dir for store your package
+           tmp.dir for temporary working folder
+           dev.dir  for your development web server
+           source.dir for storing your source code (may be in SVN working copy}
+           
+        Note: your source folder is in the same folder with this buld file, having name ${element.name} eg. com_asterman
+
+ 		Avaible targets are all, package, update_source 
+
+ 		usage phing -f build.xml target
+ 		
+ 		--> 
+
+		<!-- Get the property file to define the key folder locations if available -->
+		<!-- (conditional load stops error messages when properties file loaded by command line) -->
+		<if>
+			<available file="./project.properties" type="file" />
+			<then>
+					<property file="./project.properties" />
+			</then> 
+		</if>
+
+		<!-- Define failsafe properties, if file not available -->
+        <property name="build.version" value="1.0.0 RC15" override="false" />
+		<property name="build.folder" value="./Builds" override="false" />
+
+
+		<!-- (conditional load stops error messages when properties file loaded by command line) -->
+		<if>
+			<available file="./build.properties" type="file" />
+			<then>
+					<property file="./build.properties" />
+			</then> 
+		</if>
+
+        <!-- Define failsafe properties, if file (build.properties) not available -->
+        <property name="project.root" value="" override="false" />
+		<property name="repo.folder" value="." override="false" />
+		<property name="tmp.folder" value="${build.folder}/tmp" />
+        <tstamp>
+            <format property="DATE" pattern="%Y%m%d%H%M" />
+        </tstamp>
+
+		<!-- Internal use properties -->
+		<property name="source.dir" value="${element.name}" override="false"/>
+		<property name="pack.dir" value="${build.folder}/packages" override="false" />
+        <property name="tmp.dir" value="${build.folder}/tmp" override="false" />
+
+		<!-- create folder structure -->
+		<if>
+			<not>
+				<available file="${source.dir}" type="dir" />
+			</not>
+			<then>
+				<echo>Create source folder</echo>
+				<mkdir dir="${source.dir}" />
+			</then>
+		</if>
+		<if>
+			<not>
+				<available file="${build.folder}" type="dir" />
+			</not>
+			<then>
+				<echo>Create build folder structure</echo>
+				<mkdir dir="${build.folder}" />
+				<mkdir dir="${pack.dir}" />
+				<mkdir dir="${tmp.folder}" />
+			</then>
+		</if>
+		<!-- end of create folder structure -->
+        <!-- component site files -->
+        <fileset id="fs_component_site_dev" dir="${project.root}/components/${element.name}" defaultexcludes="true">
+            <include name="**/**" />
+			<exclude name="var/moh/**" />
+            <exclude name="**/**.gsm" />
+        </fileset>
+        <!-- component backend files -->
+        <fileset id="fs_component_admin_dev" dir="${project.root}/administrator/components/${element.name}">
+            <include name="**/**" />
+            <exclude name="${phing.project.name}.xml" />
+			<exclude name="script.php" />
+            <exclude name="**/.svn/**"/>
+        </fileset>
+        <!-- component media files -->
+        <fileset id="fs_component_media_dev" dir="${project.root}/media/${element.name}">
+            <include name="**/**" />
+            <exclude name="**/.svn/**"/>
+        </fileset>
+        <!--- component source, may be SVN working copy -->
+        <fileset id="fs_component_source" dir="./${element.name}" defaultexcludes="true">
+            <include name="**/**" />
+            <exclude name="**/.svn/**"/>    
+        </fileset>
+        <!--- file set to be deleted from tmp source folder -->
+        <fileset id="fs_tmp_deletes" dir="${tmp.folder}" defaultexcludes="true">
+                <include name="**/site/**" />
+                <include name="**/admin/**" />
+                <include name="**/media/**" />
+                <include name="*.*" />
+        </fileset>
+        <!-- temporary source file storage -->
+        <fileset id="fs_tmp_source" dir="${tmp.folder}" defaultexcludes="true">
+			<exclude name="site/var/moh/**/*.gsm" />
+            <include name="*/**" />
+            <exclude name="**/.svn/**"/>
+        </fileset>
+        
+        <target name="_clean_tmp" description="Delete temporary source storage">
+            <echo>Empty temporary source folder</echo>
+            <delete includeemptydirs="true">
+                <fileset refid="fs_tmp_deletes" />
+            </delete>
+        </target>
+
+        <target name="_prepare_build" depends="_clean_tmp">
+            <mkdir dir="${tmp.folder}" />
+            <copy todir="${tmp.folder}" includeemptydirs="true">
+                <fileset refid="fs_component_source" />
+            </copy>
+        </target>
+                
+        <target name="update_source" description="Copy files from development server to source/svn folder">
+            <echo>Building project ${phing.project.name}, copy files from dev to source</echo>
+            <echo>Copy backend files from ${project.root}/administrator/components/${element.name} to ${source.dir}/admin</echo>
+            <copy todir="${source.dir}/admin" >
+                <fileset refid="fs_component_admin_dev" />
+            </copy>
+            
+            <echo>Copy file ${project.root}/administrator/components/${element.name}/${phing.project.name}.xml to ${source.dir}</echo>
+			
+            <copy todir="${source.dir}">
+                <fileset dir="${project.root}/administrator/components/${element.name}">
+                    <include name="${phing.project.name}.xml"/>
+					<include name="script.php" />
+                </fileset>
+            </copy>
+			
+			<if>
+				<available file="${project.root}/administrator/components/${element.name}/script.php"/>
+				<then>
+					<echo>Copy file ${project.root}/administrator/components/script.php to ${source.dir}</echo>
+					<copy todir="${source.dir}">
+						<fileset dir="${project.root}/administrator/components/${element.name}">
+							<include name="script.php" />
+						</fileset>
+					</copy>
+				</then>
+				<else>
+					<echo>File ${project.root}/administrator/components/script.php does not exists, do nothing here</echo>
+				</else>
+			</if>
+            <echo>Copy site files from ${project.root}/components/${element.name} to ${source.dir}/site......</echo>
+            <copy todir="${source.dir}/site">
+                <fileset refid="fs_component_site_dev" />
+            </copy>
+			<if>
+				<available file="${project.root}/media/${element.name}" type='dir' />
+				<then>
+					<echo>Copy media files from ${project.root}/media/${element.name} to ${source.dir}/media.....</echo>
+					<copy todir="${source.dir}/media">
+						<fileset refid="fs_component_media_dev" />
+					</copy>
+				</then>
+			</if>
+        </target>
+
+        <!-- Sometime we need to copy from source (SVN working copy} to development server -->
+        <target name="update_source_to_dev">
+        </target>
+        
+         <!-- Admin package creation target -->
+         <target name="package" description="Build installation package" depends="_clean_tmp, _prepare_build">
+				<zip destfile="${pack.dir}/${element.name}_${build.version}_${DATE}.zip">
+                        <fileset refid="fs_tmp_source" />
+                </zip>              
+        </target>
+        <target name="all" description="Do all tasks" depends="update_source, _clean_tmp, _prepare_build, package">
+        </target>
+</project>
