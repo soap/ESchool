@@ -52,7 +52,7 @@
         </tstamp>
 
 		<!-- Internal use properties -->
-		<property name="source.dir" value="${element.name}" override="false"/>
+		<property name="source.dir" value="${repo.folder}/${element.name}" override="false"/>
 		<property name="pack.dir" value="${build.folder}/packages" override="false" />
         <property name="tmp.dir" value="${build.folder}/tmp" override="false" />
 
