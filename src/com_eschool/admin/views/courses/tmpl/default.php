@@ -8,6 +8,49 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eschool&view=courses');?>" method="post" name="adminForm">
+	<fieldset id="filter-bar">
+		<div class="filter-search fltlft">
+			<label class="filter-search-lbl" for="filter_search">
+				<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>:</label>
+			<input type="text" name="filter_search" id="filter_search"
+				value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
+				title="<?php echo JText::_('COM_ESCHOOL_COURSES_FILTER_SEARCH_DESC'); ?>" />
+
+			<button type="submit" class="btn">
+				<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();">
+				<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+
+		</div>
+		<div class="filter-select fltrt">
+			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'),
+					'value', 'text', $this->state->get('filter.published'), true);?>
+			</select>
+
+			<select name="filter_category_id" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('category.options', 'com_eschool'),
+					'value', 'text', $this->state->get('filter.category_id'));?>
+			</select>
+
+			<select name="filter_access" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'),
+					'value', 'text', $this->state->get('filter.access'));?>
+			</select>
+
+			<select name="filter_language" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true),
+					'value', 'text', $this->state->get('filter.language'));?>
+			</select>
+		</div>
+	</fieldset>
+	<div class="clr"> </div>
+
+	
 	<table class="adminlist">
 		<thead>
 			<tr>
@@ -20,8 +63,8 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_COURSE_GROUP', 'a.cousegroup_id', $listDirn, $listOrder); ?>
+				<th width="20%">
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_COURSE_GROUP', 'course_group_title', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
@@ -67,9 +110,9 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=course.edit&id='.$item->id);?>">
-						<?php echo $this->escape($item->title); ?></a>
+						<?php echo $this->escape($item->title); ?> (<?php echo $this->escape($item->course_code)?>)</a>
 					<?php else : ?>
-						<?php echo $this->escape($item->title); ?>
+						<?php echo $this->escape($item->title); ?> (<?php echo $this->escape($item->course_code)?>)
 					<?php endif; ?>
 					<p class="smallsub">
 						<?php if (empty($item->note)) : ?>
@@ -82,16 +125,16 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'courses.', $canChange); ?>
 				</td>
 				<td class="center">
-					<?php echo $this->escape($item->coursegroup_title); ?>
+					<?php echo $this->escape($item->course_group_title); ?>
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>
 						<span><?php echo $this->pagination->orderUpIcon($i,
-							($item->coursegroup_id == @$this->items[$i-1]->coursegroup_id),
+							//($item->coursegroup_id == @$this->items[$i-1]->coursegroup_id),
 							'courses.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 						<span><?php echo $this->pagination->orderDownIcon($i,
 							$this->pagination->total,
-							($item->coursegroup_id == @$this->items[$i+1]->coursegroup_id),
+							//($item->coursegroup_id == @$this->items[$i+1]->coursegroup_id),
 							'courses.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
 						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />

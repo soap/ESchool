@@ -44,12 +44,16 @@ class EschoolModelSemesters extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.academic_year, a.academic_half, a.class_level_id, a.checked_out, a.checked_out_time,' .
+				'a.id, a.title, a.alias, a.academic_year, a.academic_period, a.class_level_id, ' . 
+				'a.checked_out, a.checked_out_time,' .
 				'a.published, a.access, a.created, a.ordering'
 			)
 		);
 		$query->from('#__eschool_semesters AS a');
 
+		$query->select('cl.title as class_level_title');
+		$query->join('LEFT', '#__eschool_classlevels AS cl ON cl.id=a.class_level_id');
+		
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');

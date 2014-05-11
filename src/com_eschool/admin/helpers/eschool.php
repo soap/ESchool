@@ -40,22 +40,17 @@ class EschoolHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-		JSubMenuHelper::addEntry(
-			JText::_('COM_ESCHOOL_SUBMENU_STUDENTS'),
-			'index.php?option=com_eschool&view=students',
-			$vName == 'students'
-		);
-		
-		JSubMenuHelper::addEntry(
-			JText::_('COM_ESCHOOL_SUBMENU_COURSES'),
-			'index.php?option=com_eschool&view=courses',
-			$vName == 'courses'
-		);
 		
 		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_COURSEGROUPS'),
 			'index.php?option=com_eschool&view=coursegroups',
 			$vName == 'coursegroups'
+		);
+				
+		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_COURSES'),
+			'index.php?option=com_eschool&view=courses',
+			$vName == 'courses'
 		);
 
 		JSubMenuHelper::addEntry(
@@ -68,8 +63,14 @@ class EschoolHelper
 			JText::_('COM_ESCHOOL_SUBMENU_SEMESTERS'),
 			'index.php?option=com_eschool&view=semesters',
 			$vName == 'semesters'
-		);	
-				
+		);
+			
+		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_STUDENTS'),
+			'index.php?option=com_eschool&view=students',
+			$vName == 'students'
+		);
+						
 		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_REGISTRATIONS'),
 			'index.php?option=com_eschool&view=registrations',
@@ -83,5 +84,4 @@ class EschoolHelper
 		);			
 	}
 
-	
 }

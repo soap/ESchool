@@ -64,13 +64,13 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=student.edit&id='.$item->id);?>">
-						<?php echo $this->escape($item->title); ?></a>
+					<!-- 	<?php echo $this->escape($item->title); ?></a> -->
 					<?php else : ?>
 						<?php echo $this->escape($item->title); ?>
 					<?php endif; ?>
 					<p class="smallsub">
 						<?php if (empty($item->note)) : ?>
-							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias));?>
+						<!-- 	<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias));?> -->
 						<?php else : ?>
 							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE', $this->escape($item->alias), $this->escape($item->note));?>
 						<?php endif; ?></p>
@@ -80,13 +80,13 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>
-						<span><?php echo $this->pagination->orderUpIcon($i,
+						<!-- <span><?php echo $this->pagination->orderUpIcon($i,
 							($item->classlevel_id == @$this->items[$i-1]->classlevel_id),
-							'students.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-						<span><?php echo $this->pagination->orderDownIcon($i,
+							'students.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>-->
+						<!-- <span><?php echo $this->pagination->orderDownIcon($i,
 							$this->pagination->total,
 							($item->classlevel_id == @$this->items[$i+1]->classlevel_id),
-							'students.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+							'students.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>-->
 						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
 					<?php else : ?>

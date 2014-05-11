@@ -177,7 +177,7 @@ class EschoolModelClasslevel extends JModelAdmin
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
 				$query->from('#__eschool_classlevels');
-				$query->where('category_id = '.(int) $table->category_id);
+				//$query->where('category_id = '.(int) $table->category_id);
 				
 				$max = (int) $db->setQuery($query)->loadResult();
 				

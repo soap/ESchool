@@ -44,7 +44,7 @@ class EschoolModelCourses extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.title, a.alias, a.checked_out, a.checked_out_time,' .
+				'a.id, a.title, a.course_code, a.alias, a.checked_out, a.checked_out_time,' .
 				'a.published, a.access, a.created, a.ordering'
 			)
 		);
@@ -58,6 +58,8 @@ class EschoolModelCourses extends JModelList
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 
+		$query->select('cg.title as course_group_title');
+		$query->join('LEFT', '#__eschool_coursegroups AS cg ON cg.id = a.course_group_id');
 
 		// Join over the users for the author.
 		$query->select('ua.name AS author_name');
