@@ -90,8 +90,5 @@ class EschoolViewRawscores extends JViewLegacy
 			JToolBarHelper::trash('rawscores.trash','JTOOLBAR_TRASH');
 		}
 
-		if ($canDo->get('core.admin')) {
-			JToolBarHelper::preferences('com_eschool');
-		}
 	}
 }

@@ -64,7 +64,13 @@ class EschoolHelper
 			'index.php?option=com_eschool&view=semesters',
 			$vName == 'semesters'
 		);
-			
+		
+		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_CLASSROOMS'),
+			'index.php?option=com_eschool&view=classrooms',
+			$vName == 'classrooms'
+		);
+						
 		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_STUDENTS'),
 			'index.php?option=com_eschool&view=students',

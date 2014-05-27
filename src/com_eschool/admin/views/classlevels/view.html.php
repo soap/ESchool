@@ -90,8 +90,5 @@ class EschoolViewClasslevels extends JViewLegacy
 			JToolBarHelper::trash('classlevels.trash','JTOOLBAR_TRASH');
 		}
 
-		if ($canDo->get('core.admin')) {
-			JToolBarHelper::preferences('com_eschool');
-		}
 	}
 }

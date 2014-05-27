@@ -90,9 +90,5 @@ class EschoolViewRegistrations extends JViewLegacy
 		else if ($canDo->get('core.edit.state')) {
 			JToolBarHelper::trash('registrations.trash','JTOOLBAR_TRASH');
 		}
-
-		if ($canDo->get('core.admin')) {
-			JToolBarHelper::preferences('com_eschool');
-		}
 	}
 }

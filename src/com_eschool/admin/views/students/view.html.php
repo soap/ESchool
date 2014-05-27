@@ -90,8 +90,5 @@ class EschoolViewStudents extends JViewLegacy
 			JToolBarHelper::trash('students.trash','JTOOLBAR_TRASH');
 		}
 
-		if ($canDo->get('core.admin')) {
-			JToolBarHelper::preferences('com_eschool');
-		}
 	}
 }

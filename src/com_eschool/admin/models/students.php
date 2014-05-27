@@ -22,7 +22,7 @@ class EschoolModelStudents extends JModelList
 	 * @return  void
 	 * @since   1.0
 	 */
-	protected function populateState($ordering = 'firstname', $direction = 'asc')
+	protected function populateState($ordering = 'first_name', $direction = 'asc')
 	{
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -44,12 +44,15 @@ class EschoolModelStudents extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.firstname, a.lastname, a.student_code, a.checked_out, a.checked_out_time,' .
-				'a.published, a.access, a.created, a.ordering'
+				'a.id, a.first_name, a.last_name, a.student_code, a.entry_date, ' .
+				' a.checked_out, a.checked_out_time, a.access, a.created, a.ordering'
 			)
 		);
 		$query->from('#__eschool_students AS a');
 
+		$query->select('us.username');
+		$query->join('LEFT', '#__users AS us ON us.id=a.id');
+		
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
