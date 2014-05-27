@@ -7,44 +7,7 @@ $user		= JFactory::getUser();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_eschool&view=coursegroups');?>" method="post" name="adminForm">
-	<fieldset id="filter-bar">
-		<div class="filter-search fltlft">
-			<label class="filter-search-lbl" for="filter_search">
-				<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>:</label>
-			<input type="text" name="filter_search" id="filter_search"
-				value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-				title="<?php echo JText::_('COM_ESCHOOL_COURSEGROUPS_FILTER_SEARCH_DESC'); ?>" />
-
-			<button type="submit" class="btn">
-				<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
-			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();">
-				<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
-
-		</div>
-		<div class="filter-select fltrt">
-			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'),
-					'value', 'text', $this->state->get('filter.published'), true);?>
-			</select>
-
-			<select name="filter_access" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'),
-					'value', 'text', $this->state->get('filter.access'));?>
-			</select>
-
-			<select name="filter_language" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true),
-					'value', 'text', $this->state->get('filter.language'));?>
-			</select>
-		</div>
-	</fieldset>
-	<div class="clr"> </div>
-
-
+<form action="<?php echo JRoute::_('index.php?option=com_eschool&view=classrooms');?>" method="post" name="adminForm">
 	<table class="adminlist">
 		<thead>
 			<tr>
@@ -55,11 +18,14 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
+				</th>
+				<th width="10%">
+					<?php echo JHtml::_('grid.sort', 'JCATEGORY', 'a.category_id', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
-					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'coursegroups.saveorder'); ?>
+					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'classrooms.saveorder'); ?>
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
@@ -86,10 +52,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<?php foreach ($this->items as $i => $item) :
 			$item->max_ordering = 0; //??
 			$ordering	= ($listOrder == 'a.ordering');
-			$canCreate	= $user->authorise('core.create',		'com_eschool');
-			$canEdit	= $user->authorise('core.edit',			'com_eschool.coursegroup.'.$item->id);
+			$canCreate	= $user->authorise('core.create',		'com_eschool.category.'.$item->category_id);
+			$canEdit	= $user->authorise('core.edit',			'com_eschool.classroom.'.$item->id);
 			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
-			$canChange	= $user->authorise('core.edit.state',	'com_eschool.coursegroup.'.$item->id) && $canCheckin;
+			$canChange	= $user->authorise('core.edit.state',	'com_eschool.classroom.'.$item->id) && $canCheckin;
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center">
@@ -97,10 +63,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td>
 					<?php if ($item->checked_out) : ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'coursegroups.', $canCheckin); ?>
+						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'classrooms.', $canCheckin); ?>
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
-					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=coursegroup.edit&id='.$item->id);?>">
+					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=classroom.edit&id='.$item->id);?>">
 						<?php echo $this->escape($item->title); ?></a>
 					<?php else : ?>
 						<?php echo $this->escape($item->title); ?>
@@ -113,16 +79,20 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 						<?php endif; ?></p>
 				</td>
 				<td class="center">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'coursegroups.', $canChange); ?>
+					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'classrooms.', $canChange); ?>
+				</td>
+				<td class="center">
+					<?php echo $this->escape($item->category_title); ?>
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>
 						<span><?php echo $this->pagination->orderUpIcon($i,
-							
-							'coursegroups.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+							($item->classlevel_id == @$this->items[$i-1]->classlevel_id),
+							'classrooms.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 						<span><?php echo $this->pagination->orderDownIcon($i,
 							$this->pagination->total,
-							'coursegroups.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+							($item->classlevel_id == @$this->items[$i+1]->classlevel_id),
+							'classrooms.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
 						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
 					<?php else : ?>
@@ -138,7 +108,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<td class="center">
 					<?php echo JHTML::_('date',$item->created, 'Y-m-d'); ?>
 				</td>
-				
 				<td class="center">
 					<?php echo (int) $item->id; ?>
 				</td>

@@ -29,10 +29,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					'value', 'text', $this->state->get('filter.published'), true);?>
 			</select>
 
-			<select name="filter_category_id" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('category.options', 'com_eschool'),
-					'value', 'text', $this->state->get('filter.category_id'));?>
+			<select name="filter_coursegroup_id" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_COURSEGROUP');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('coursegroup.options'),
+					'value', 'text', $this->state->get('filter.coursegroup_id'));?>
 			</select>
 
 			<select name="filter_access" class="inputbox" onchange="this.form.submit()">
