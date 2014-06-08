@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id$ -->
+<extension type="component" version="2.5.0" method="upgrade">
+	<name>COM_ESCHOOL</name>
+	<author>Prasit Gebsaap</author>
+	<creationDate>Feb 2014</creationDate>
+	<copyright>Copyright 2014 by Prasit Gebsaap. All rights reserved.	</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<authorEmail>soap@joomlant.com</authorEmail>
+	<authorUrl>www.joomlant.com</authorUrl>
+	<version>1.0</version>
+	<description>COM_ESCHOOL_XML_DESCRIPTION</description>
+	<files folder="site">
+        <filename>eschool.php</filename>
+        <filename>index.html</filename>
+        <filename>controller.php</filename>
+        <filename>router.php</filename>
+        <folder>controllers</folder>
+        <folder>language</folder>
+        <folder>helpers</folder>
+        <folder>models</folder>
+        <folder>views</folder>
+    </files>
+	<administration>
+		<files folder="admin">
+			<filename>index.html</filename>
+			<filename>eschool.php</filename>
+			<filename>controller.php</filename>
+			<folder>install</folder>
+			<folder>controllers</folder>
+        	<folder>language</folder>
+        	<folder>helpers</folder>
+        	<folder>models</folder>
+        	<folder>views</folder>
+        	<folder>tables</folder>
+		</files>
+		<menu>COM_ESCHOOL</menu>
+	</administration>
+	<install folder="admin">
+		<sql>
+			<file charset="utf8" driver="mysql">install/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	<uninstall folder="admin">
+		<sql>
+			<file charset="utf8" driver="mysql">install/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+	<media destination="com_eschool" folder="media">
+		<folder>css</folder>
+		<folder>js</folder>
+		<folder>images</folder>
+		<filename>index.html</filename>
+	</media>
+	<update folder="admin"> <!-- Runs on update/main version id in #__schemas table -->
+    	<!-- we have to provide files in this folder like 0.0.1.sql,0.0.2.sql -->
+        <schemas>
+            <schemapath type="mysql">install/updates/mysql</schemapath>
+        </schemas>
+    </update>
+</extension>
+

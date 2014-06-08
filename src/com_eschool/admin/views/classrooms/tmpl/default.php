@@ -21,7 +21,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'JCATEGORY', 'a.category_id', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_CLASSLEVEL', 'a.classlevel_id', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
@@ -52,7 +52,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<?php foreach ($this->items as $i => $item) :
 			$item->max_ordering = 0; //??
 			$ordering	= ($listOrder == 'a.ordering');
-			$canCreate	= $user->authorise('core.create',		'com_eschool.category.'.$item->category_id);
+			$canCreate	= $user->authorise('core.create',		'com_eschool.category.'.$item->classlevel_id);
 			$canEdit	= $user->authorise('core.edit',			'com_eschool.classroom.'.$item->id);
 			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
 			$canChange	= $user->authorise('core.edit.state',	'com_eschool.classroom.'.$item->id) && $canCheckin;
@@ -82,7 +82,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'classrooms.', $canChange); ?>
 				</td>
 				<td class="center">
-					<?php echo $this->escape($item->category_title); ?>
+					<?php echo $this->escape($item->classlevel_title); ?>
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>

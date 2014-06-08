@@ -45,11 +45,15 @@ class EschoolModelClassrooms extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.title, a.checked_out, a.checked_out_time,' .
+				'a.id, a.alias, a.title, a.checked_out, a.checked_out_time,' .
+				'a.classlevel_id,' .
 				'a.published, a.access, a.created, a.ordering'
 			)
 		);
 		$query->from('#__eschool_classrooms AS a');
+		
+		$query->select('cl.title as classlevel_title');
+		$query->join('LEFT', '#__eschool_classlevels as cl ON cl.id=a.classlevel_id');
 
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
