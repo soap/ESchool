@@ -9,6 +9,6 @@ jimport('joomla.application.component.controllerform');
  * @subpackage  com_eschool
  * @since       1.0
  */
-class EschoolControllerCourse extends JControllerForm
+class EschoolControllerStudent extends JControllerForm
 {
 }

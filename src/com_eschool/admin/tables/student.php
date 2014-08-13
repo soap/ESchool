@@ -54,11 +54,25 @@ class EschoolTableStudent extends JTable
 	public function check()
 	{
 		// Check for valid name.
-		if (trim($this->title) === '') {
-			$this->setError(JText::_('COM_Eschool_ERROR_Student_TITLE'));
+		if (trim($this->first_name) === '') {
+			$this->setError(JText::_('COM_ESCHOOL_ERROR_FIRST_NAME'));
 			return false;
 		}
-
+		
+		if (trim($this->last_name) === '') {
+			$this->setError(JText::_('COM_ESCHOOL_ERROR_LAST_NAME'));
+			return false;
+		}
+		
+		if (trim($this->student_code) === '') {
+			$this->setError(JText::_('COM_ESCHOOL_ERROR_STUDENT_CODE'));
+			return false;
+		}
+		
+		if (trim($this->entry_date) === '') {
+			$this->setError(JText::_('COM_ESCHOOL_ERROR_ENTRY_DATE'));
+			return false;
+		}
 		return true;
 	}
 

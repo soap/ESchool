@@ -161,24 +161,16 @@ class EschoolModelStudent extends JModelAdmin
 	{
 		jimport('joomla.filter.output');
 
-		// Prepare the alias.
-		$table->alias = JApplication::stringURLSafe($table->alias);
-
-		// If the alias is empty, prepare from the value of the title.
-		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->title);
-		}
-
 		if (empty($table->id)) {
 			// For a new record.
-
+			if (!empty($table->user_id)) $table->id = $table->user_id;
+			
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db		= JFactory::getDbo();
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
 				$query->from('#__eschoo_students');
-				//$query->where('category_id = '.(int) $table->category_id);
 				
 				$max = (int) $db->setQuery($query)->loadResult();
 				
@@ -191,31 +183,5 @@ class EschoolModelStudent extends JModelAdmin
 			}
 		}
 
-		// Clean up keywords -- eliminate extra spaces between phrases
-		// and cr (\r) and lf (\n) characters from string
-		if (!empty($this->metakey)) {
-			// Only process if not empty.
-
-			// array of characters to remove.
-			$strip = array("\n", "\r", '"', '<', '>');
-			
-			// Remove bad characters.
-			$clean = JString::str_ireplace($strip, ' ', $this->metakey); 
-
-			// Create array using commas as delimiter.
-			$oldKeys = explode(',', $clean);
-			$newKeys = array();
-			
-			foreach ($oldKeys as $key)
-			{
-				// Ignore blank keywords
-				if (trim($key)) {
-					$newKeys[] = trim($key);
-				}
-			}
-
- 			// Put array back together, comma delimited.
- 			$this->metakey = implode(', ', $newKeys);
-		}
 	}
 }
