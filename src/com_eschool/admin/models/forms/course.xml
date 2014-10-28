@@ -39,7 +39,14 @@
 			size="45" required="true"/>
 			
 		<field name="course_type"
-			/>
+			type="list"
+			default="1" required="true"
+			label="COM_ESCHOOL_FIELD_COURSE_TYPE_LABEL"
+			description="COM_ESCHOOL_FIELD_COURSE_TYPE_DESC">
+			<option value="1">COM_ESCHOOL_OPTION_BASIC</option>
+			<option value="2">COM_ESCHOOL_OPTION_ADDITIONAL</option>
+			<option value="3">COM_ESCHOOL_OPTION_ACTIVITY</option>
+		</field>
 		<field name="course_group_id"
 			type="sql"
 			query="SELECT id, title FROM #__eschool_coursegroups"

@@ -97,7 +97,7 @@
             <exclude name="**/.svn/**"/>
         </fileset>
         <!--- component source, may be SVN working copy -->
-        <fileset id="fs_component_source" dir="./${element.name}" defaultexcludes="true">
+        <fileset id="fs_component_source" dir="${repo.folder}/${element.name}" defaultexcludes="true">
             <include name="**/**" />
             <exclude name="**/.svn/**"/>    
         </fileset>

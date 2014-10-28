@@ -1,6 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
 <config>
+    <fieldset name="compat" label="COM_ESCHOOL_CONFIG_COMPAT_LABEL" description="COM_ESCHOOL_CONFIG_COMPAT_DESC">
+       <field name="projectfork_css" type="list" default="1" label="COM_ESCHOOL_CONFIG_CSS_LABEL" description="COM_ESCHOOL_CONFIG_CSS_DESC">
+		    <option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+        <field name="bootstrap_css" type="list" default="" label="COM_ESCHOOL_CONFIG_BOOTSTRAP_CSS_LABEL" description="COM_ESCHOOL_CONFIG_BOOTSTRAP_CSS_DESC">
+		    <option value="">JAUTO</option>
+		    <option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+        <field name="bootstrap_js" type="list" default="" label="COM_ESCHOOL_CONFIG_BOOTSTRAP_JS_LABEL" description="COM_ESCHOOL_CONFIG_BOOTSTRAP_JS_DESC">
+		    <option value="">JAUTO</option>
+            <option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+        <field name="jquery_site" type="list" default="" label="COM_ESCHOOL_CONFIG_JQUERY_SITE_LABEL" description="COM_ESCHOOL_CONFIG_JQUERY_DESC">
+		    <option value="">JAUTO</option>
+            <option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+        <field name="jquery_admin" type="list" default="" label="COM_ESCHOOL_CONFIG_JQUERY_ADMIN_LABEL" description="COM_ESCHOOL_CONFIG_JQUERY_DESC">
+		    <option value="">JAUTO</option>
+            <option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+	</fieldset>
+	<fieldset name="course" label="COM_ESCHOOL_CONFIG_COURSE_LABEL" description="COM_ESCHOOL_CONFIG_COURSE_DESC">
+		<field name="code_alias" type="list" default="1" label="COM_ESCHOOL_CONFIG_CODE_ALIAS_LABEL" description="COM_ESCHOOL_CONFIG_CODE_ALIAS_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>	
+		</field>
+	</fieldset>
 	<fieldset
 		name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"

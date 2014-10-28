@@ -1,20 +1,22 @@
 <?php
 defined('_JEXEC') or die;
 
+JHtml::_('script.jQuery');
 JHtml::_('behavior.tooltip');
+JHtml::_('behavior.modal');
 
 $user		= JFactory::getUser();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_eschool&view=courses');?>" method="post" name="adminForm">
-	<fieldset id="filter-bar">
+<form action="<?php echo JRoute::_('index.php?option=com_eschool&view=syllabuscourses');?>" method="post" name="adminForm">
+		<fieldset id="filter-bar">
 		<div class="filter-search fltlft">
 			<label class="filter-search-lbl" for="filter_search">
 				<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>:</label>
 			<input type="text" name="filter_search" id="filter_search"
 				value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-				title="<?php echo JText::_('COM_ESCHOOL_COURSES_FILTER_SEARCH_DESC'); ?>" />
+				title="<?php echo JText::_('COM_ESCHOOL_SYLLABUSCOURSES_FILTER_SEARCH_DESC'); ?>" />
 
 			<button type="submit" class="btn">
 				<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
@@ -29,10 +31,22 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					'value', 'text', $this->state->get('filter.published'), true);?>
 			</select>
 
-			<select name="filter_coursegroup_id" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_COURSEGROUP');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('coursegroup.options'),
-					'value', 'text', $this->state->get('filter.coursegroup_id'));?>
+			<select name="filter_syllabus_id" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_SYLLABUS');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('syllabus.options'),
+					'value', 'text', $this->state->get('filter.syllabus_id'));?>
+			</select>
+			
+			<select name="filter_class_level_id" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_CLASS_LEVEL');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('classlevel.options'),
+					'value', 'text', $this->state->get('filter.class_level_id'));?>
+			</select>
+			
+			<select name="filter_academic_term" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_ACADEMIC_TERM');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('academicterm.options'),
+					'value', 'text', $this->state->get('filter.academic_term'));?>
 			</select>
 
 			<select name="filter_access" class="inputbox" onchange="this.form.submit()">
@@ -50,8 +64,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 	</fieldset>
 	<div class="clr"> </div>
 
-	
-	<table class="adminlist">
+	<table class="adminlist" id="syllabuscoursesList">
 		<thead>
 			<tr>
 				<th width="1%">
@@ -61,17 +74,20 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_CREDIT', 'a.credit', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_COURSE_TYPE', 'a.course_type', $listDirn, $listOrder); ?>	
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SYLLABUS', 'a.syllabus_id', $listDirn, $listOrder); ?>
 				</th>
-				<th width="20%">
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_COURSE_GROUP', 'course_group_title', $listDirn, $listOrder); ?>
+				<th width="10%">
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_CLASS_LEVEL', 'a.class_level_id', $listDirn, $listOrder); ?>
+				</th>
+				<th width="5%">
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_ACADEMIC_TERM', 'a.academic_term', $listDirn, $listOrder); ?>	
 				</th>
 				<th width="10%" class="nowrap">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
-					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'courses.saveorder'); ?>
+					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'syllabuscourses.saveorder'); ?>
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
@@ -81,6 +97,9 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</th>
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
+				</th>
+				<th width="5%">
+					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" class="nowrap">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -98,10 +117,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<?php foreach ($this->items as $i => $item) :
 			$item->max_ordering = 0; //??
 			$ordering	= ($listOrder == 'a.ordering');
-			$canCreate	= $user->authorise('core.create',		'com_eschool');
-			$canEdit	= $user->authorise('core.edit',			'com_eschool.course.'.$item->id);
+			$canCreate	= $user->authorise('core.create',		'com_eschool.category.'.$item->category_id);
+			$canEdit	= $user->authorise('core.edit',			'com_eschool.syllabuscourse.'.$item->id);
 			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
-			$canChange	= $user->authorise('core.edit.state',	'com_eschool.course.'.$item->id) && $canCheckin;
+			$canChange	= $user->authorise('core.edit.state',	'com_eschool.syllabuscourse.'.$item->id) && $canCheckin;
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center">
@@ -109,39 +128,42 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td>
 					<?php if ($item->checked_out) : ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'courses.', $canCheckin); ?>
+						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'syllabuscourses.', $canCheckin); ?>
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
-					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=course.edit&id='.$item->id);?>">
-						<?php echo $this->escape($item->title); ?> (<?php echo $this->escape($item->course_code)?>)</a>
+					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=syllabuscourse.edit&id='.$item->id);?>">
+						<?php echo $this->escape($item->course_title); ?></a>
 					<?php else : ?>
-						<?php echo $this->escape($item->title); ?> (<?php echo $this->escape($item->course_code)?>)
+						<?php echo $this->escape($item->course_title); ?>
 					<?php endif; ?>
 					<p class="smallsub">
 						<?php if (empty($item->note)) : ?>
-							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias));?>
+							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->course_code));?>
 						<?php else : ?>
-							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE', $this->escape($item->alias), $this->escape($item->note));?>
+							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE', $this->escape($item->course_code), $this->escape($item->note));?>
 						<?php endif; ?></p>
 				</td>
 				<td class="center">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'courses.', $canChange); ?>
+					<?php echo $this->escape($item->credit)?>
 				</td>
 				<td class="center">
-					<?php echo $this->escape(ESchoolHelper::getCourseTypeTitle($item->course_type));?>
+					<?php echo $this->escape($item->syllabus_title); ?>
 				</td>
 				<td class="center">
-					<?php echo $this->escape($item->course_group_title); ?>
+					<?php echo $this->escape($item->classlevel_title)?>
+				</td>
+				<td class="center">
+					<?php echo $this->escape($item->academic_term)?>
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>
 						<span><?php echo $this->pagination->orderUpIcon($i,
-							//($item->coursegroup_id == @$this->items[$i-1]->coursegroup_id),
-							'courses.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+							($item->syllabus_id == @$this->items[$i-1]->syllabus_id),
+							'syllabuscourses.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 						<span><?php echo $this->pagination->orderDownIcon($i,
 							$this->pagination->total,
-							//($item->coursegroup_id == @$this->items[$i+1]->coursegroup_id),
-							'courses.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+							($item->syllabus_id == @$this->items[$i+1]->syllabus_id),
+							'syllabuscourses.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
 						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
 					<?php else : ?>
@@ -156,6 +178,13 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td class="center">
 					<?php echo JHTML::_('date',$item->created, 'Y-m-d'); ?>
+				</td>
+				<td class="center">
+					<?php if ($item->language == '*'): ?>
+						<?php echo JText::_('JALL'); ?>
+					<?php else: ?>
+						<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+					<?php endif; ?>
 				</td>
 				<td class="center">
 					<?php echo (int) $item->id; ?>

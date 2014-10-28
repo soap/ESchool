@@ -27,10 +27,11 @@ class EschoolModelCourses extends JModelList
 			$config['filter_fields'] = array(
 				'id', 'a.id',
 				'title', 'a.title',
-				'alias', 'a.alias',
+				'alias', 'a.alias', 
+				'a.course_code', 'a.course_type',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
-				'catid', 'a.catid', 'category_title',
+				'catid', 'a.catid', 'course_group_title',
 				'published', 'a.published',
 				'access', 'a.access', 'access_level',
 				'ordering', 'a.ordering',
@@ -60,6 +61,7 @@ class EschoolModelCourses extends JModelList
 		// Initialise variables.
 		$app = JFactory::getApplication();
 
+		$this->context .=  $app->input->get('layout', 'default');
 		$value = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $value);
 
@@ -74,6 +76,9 @@ class EschoolModelCourses extends JModelList
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $value);
+		
+		$value = $app->getUserStateFromRequest($this->context.'.exclude.syllabus_id', 'exclude_syllabus_id');
+		$this->setState('exclude.syllabus_id', $value);
 		
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -95,7 +100,7 @@ class EschoolModelCourses extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.title, a.course_code, a.alias, a.checked_out, a.checked_out_time,' .
+				'a.id, a.title, a.course_code, a.course_type, a.alias, a.checked_out, a.checked_out_time,' .
 				'a.published, a.access, a.created, a.ordering'
 			)
 		);
@@ -151,6 +156,11 @@ class EschoolModelCourses extends JModelList
 			$query->where('a.course_group_id IN ('.$coursegroupId.')');
 		}
 
+		$syllabusId = $this->getState('exclude.syllabus_id');
+		if ($syllabusId) {
+			$query->where('a.id NOT IN (SELECT course_id FROM #__eschool_syllabus_courses WHERE syllabus_id='.$syllabusId.')');
+		}
+		
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
 			$query->where('a.language = '.$db->quote($language));

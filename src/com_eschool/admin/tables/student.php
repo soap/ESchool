@@ -87,7 +87,7 @@ class EschoolTableStudent extends JTable
 	public function store($updateNulls = false)
 	{
 		// Initialiase variables.
-		$date	= JFactory::getDate()->toMySQL();
+		$date	= JFactory::getDate()->toSql();
 		$userId	= JFactory::getUser()->get('id');
 
 		if (empty($this->id)) {

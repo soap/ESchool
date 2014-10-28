@@ -161,8 +161,12 @@ class EschoolModelCourse extends JModelAdmin
 		jimport('joomla.filter.output');
 
 		// Prepare the alias.
-		$table->alias = JApplication::stringURLSafe($table->alias);
-
+		if ((bool)JComponentHelper::getParams('com_eschool')->get('code_alias', true)) {
+			$table->alias = JApplication::stringURLSafe($table->course_code);
+		}else{
+			$table->alias = JApplication::stringURLSafe($table->alias);
+		}
+		
 		// If the alias is empty, prepare from the value of the title.
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->title);

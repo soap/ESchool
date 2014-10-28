@@ -1,5 +1,7 @@
 <?php
 defined('_JEXEC') or die;
+
+
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
@@ -8,9 +10,8 @@ JHtml::_('behavior.keepalive');
 	// Attach a behaviour to the submit button to check validation.
 	Joomla.submitbutton = function(task)
 	{
-		var form = document.id('course-form');
-		if (task == 'course.cancel' || document.formvalidator.isValid(form)) {
-			<?php echo $this->form->getField('description')->save(); ?>
+		var form = document.id('student-form');
+		if (task == 'student.cancel' || document.formvalidator.isValid(form)) {
 			Joomla.submitform(task, form);
 		}
 		else {
@@ -32,39 +33,43 @@ JHtml::_('behavior.keepalive');
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_eschool&layout=edit&id='.(int) $this->item->id); ?>"
-	method="post" name="adminForm" id="course-form" class="form-validate">
+	method="post" name="adminForm" id="student-form" class="form-validate">
 	<div class="width-60 fltlft">
 		<fieldset class="adminform">
 			<ul class="adminformlist">
 				<li>
-					<?php echo $this->form->getLabel('title'); ?>
-					<?php echo $this->form->getInput('title'); ?>
+					<?php echo $this->form->getLabel('user_id'); ?>
+					<?php echo $this->form->getInput('user_id'); ?>
 				</li>
 				
 				<li>
-					<?php echo $this->form->getLabel('alias'); ?>
-					<?php echo $this->form->getInput('alias'); ?>
+					<?php echo $this->form->getLabel('student_code'); ?>
+					<?php echo $this->form->getInput('student_code'); ?>
 				</li>
 				
 				<li>
-					<?php echo $this->form->getLabel('course_code'); ?>
-					<?php echo $this->form->getInput('course_code'); ?>
+					<?php echo $this->form->getLabel('gender'); ?>
+					<?php echo $this->form->getInput('gender'); ?>
+				</li>
+															
+				<li>
+					<?php echo $this->form->getLabel('first_name'); ?>
+					<?php echo $this->form->getInput('first_name'); ?>
 				</li>
 				
 				<li>
-					<?php echo $this->form->getLabel('course_type'); ?>
-					<?php echo $this->form->getInput('course_type'); ?>
+					<?php echo $this->form->getLabel('last_name'); ?>
+					<?php echo $this->form->getInput('last_name'); ?>
 				</li>
-				<li>
-					<?php echo $this->form->getLabel('class_level_id'); ?>
-					<?php echo $this->form->getInput('class_level_id'); ?>
-				</li>				
 
 				<li>
-					<?php echo $this->form->getLabel('course_group_id'); ?>
-					<?php echo $this->form->getInput('course_group_id'); ?>
+					<?php echo $this->form->getLabel('entry_date'); ?>
+					<?php echo $this->form->getInput('entry_date'); ?>
 				</li>
-
+				<li>
+					<?php echo $this->form->getLabel('classlevel_id'); ?>
+					<?php echo $this->form->getInput('classlevel_id'); ?>
+				</li>
 				<li>
 					<?php echo $this->form->getLabel('published'); ?>
 					<?php echo $this->form->getInput('published'); ?>
@@ -91,14 +96,10 @@ JHtml::_('behavior.keepalive');
 				</li>
 			</ul>
 
-			<?php echo $this->form->getLabel('description'); ?>
-			<div class="clr"></div>
-			<?php echo $this->form->getInput('description'); ?>
-
 		</fieldset>
 	</div>
 	<div class="width-40 fltrt">
-		<?php echo JHtml::_('sliders.start','course-sliders-'.$this->item->id, array('useCookie' => 1)); ?>
+		<?php echo JHtml::_('sliders.start','student-sliders-'.$this->item->id, array('useCookie' => 1)); ?>
 
 		<?php echo $this->loadTemplate('params'); ?>
 

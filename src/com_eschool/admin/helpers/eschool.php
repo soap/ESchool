@@ -52,6 +52,20 @@ class EschoolHelper
 			'index.php?option=com_eschool&view=courses',
 			$vName == 'courses'
 		);
+		
+		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_SYLLABUSES'),
+			'index.php?option=com_eschool&view=syllabuses',
+			$vName == 'syllabuses'
+		);
+		
+		if ($vName == 'syllabuscourses') {
+			JSubMenuHelper::addEntry(
+				JText::_('COM_ESCHOOL_SUBMENU_SYLLABUSCOURSES'),
+				'index.php?option=com_eschool&view=syllabuscourses',
+				true
+			);
+		}
 
 		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_CLASSLEVELS'),
@@ -88,6 +102,21 @@ class EschoolHelper
 			'index.php?option=com_eschool&view=rawscores',
 			$vName == 'rawscores'
 		);			
+	}
+	
+	public static function getCourseTypeTitle($value)
+	{
+		$result = JText::_("COM_ESCHOOL_OPTION_UNKNOWN");
+		switch ($value) {
+			case 1 : $result = JText::_("COM_ESCHOOL_OPTION_BASIC");
+				break;
+			case 2 : $result = JText::_("COM_ESCHOOL_OPTION_ADDITIONAL");
+				break;
+			case 3 : $result = JText::_("COM_ESCHOOL_OPTION_ACTIVITY");
+				break;
+		}
+		
+		return $result;
 	}
 
 }
