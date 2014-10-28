@@ -31,8 +31,8 @@
 		</if>
 
 		<!-- Define failsafe properties, if file not available -->
-        <property name="build.version" value="1.0.0 RC15" override="false" />
-		<property name="build.folder" value="./Builds" override="false" />
+        <property name="build.version" value="1.0.0 RC15" override="true" />
+		<property name="build.folder" value="./Builds" override="true" />
 
 
 		<!-- (conditional load stops error messages when properties file loaded by command line) -->

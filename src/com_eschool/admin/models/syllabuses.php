@@ -1,15 +1,16 @@
 <?php
 defined('_JEXEC') or die;
+
 jimport('joomla.application.component.modellist');
 
 /**
- * Registrations model.
+ * Syllabuses model.
  *
- * @package     E-School Management
+ * @package     ESchool
  * @subpackage  com_eschool
  * @since       1.0
  */
-class EschoolModelRegistrations extends JModelList
+class EschoolModelSyllabuses extends JModelList
 {
 	/**
 	 * Method to auto-populate the model state.
@@ -22,7 +23,7 @@ class EschoolModelRegistrations extends JModelList
 	 * @return  void
 	 * @since   1.0
 	 */
-	protected function populateState($ordering = 'student_id', $direction = 'asc')
+	protected function populateState($ordering = 'title', $direction = 'asc')
 	{
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -39,26 +40,35 @@ class EschoolModelRegistrations extends JModelList
 		// Initialise variables.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-
+		
+		$query2 = $db->getQuery(true);
+		$query3 = $db->getQuery(true);
+		
+		$query2->select('COUNT(*)')
+			->from('#__eschool_syllabus_courses as sc')
+			->where('sc.syllabus_id = a.id');
+		
+		$query3->select('COALESCE(SUM(sc2.credit),0)')
+			->from('#__eschool_syllabus_courses AS sc2')
+			->where('sc2.syllabus_id = a.id');
+		
 		// Select the required fields from the table.
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.alias, a.student_id, a.semester_id, a.syllabus_id, '.
-				'a.checked_out, a.checked_out_time,' .
-				'a.published, a.access, a.created, a.ordering'
+				'a.id, a.title, a.alias, a.credit, a.checked_out, a.checked_out_time,' .	
+				'a.published, a.access, a.created, a.ordering, a.language, ' .
+				'('.$query2.') AS total_courses, ' .
+				'('.$query3.') AS total_credits ' 
 			)
 		);
-		$query->from('#__eschool_registrations AS a');
-
-		// Join over semester data
-		$query->select('sm.academic_year, sm.academic_period, sm.class_level_id as class_level');
-		$query->join('LEFT', '#__eschool_semesters AS sm ON sm.id=a.semester_id');
 		
-		// Join over student data
-		$query->select('st.student_code, st.first_name, st.last_name, CONCAT(st.first_name,\' \', st.last_name) AS fullname');
-		$query->join('LEFT', '#__eschool_students AS st ON st.id=a.student_id');
-				
+		$query->from('#__eschool_syllabuses AS a');
+
+		// Join over the language
+		$query->select('l.title AS language_title');
+		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
+
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
@@ -66,6 +76,7 @@ class EschoolModelRegistrations extends JModelList
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
+
 
 		// Join over the users for the author.
 		$query->select('ua.name AS author_name');
@@ -79,4 +90,13 @@ class EschoolModelRegistrations extends JModelList
 
 		return $query;
 	}
+	
+	public function getItems()
+	{
+		$items = parent::getItems();
+		if ($items === false) return false;
+		
+		return $items;	
+	}
+
 }

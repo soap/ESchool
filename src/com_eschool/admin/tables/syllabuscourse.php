@@ -1,27 +1,28 @@
 <?php
 defined('_JEXEC') or die;
+
 jimport('joomla.database.table');
 
 /**
- * Registration table.
+ * Syllabuscourse table.
  *
  * @package     ESchool
  * @subpackage  com_eschool
  * @since       1.0
  */
-class EschoolTableRegistration extends JTable
+class EschoolTableSyllabuscourse extends JTable
 {
 	/**
 	 * Constructor.
 	 *
 	 * @param   JDatabase  $db  A database connector object.
 	 *
-	 * @return  EschoolTableRegistration
+	 * @return  EschoolTableSyllabuscourse
 	 * @since   1.0
 	 */
 	public function __construct($db)
 	{
-		parent::__construct('#__eschool_registrations', 'id', $db);
+		parent::__construct('#__eschool_syllabus_courses', 'id', $db);
 	}
 
 	/**
@@ -53,24 +54,18 @@ class EschoolTableRegistration extends JTable
 	 */
 	public function check()
 	{
-		// Check for valid semester		
-		if (empty($this->semester_id)) {
-			$this->setError(JText::_('COM_ESCHOOL_ERROR_SEMESTER_ID'));
+		// Check for valid name.
+		if (trim($this->syllabus_id) === '') {
+			$this->setError(JText::_('COM_ESCHOOL_ERROR_SYLLABUSCOURSE_SYLLABUS_ID'));
+			return false;
+		}
+		
+		// Check for valid name.
+		if (trim($this->course_id) === '') {
+			$this->setError(JText::_('COM_ESCHOOL_ERROR_SYLLABUSCOURSE_COURSE_ID'));
 			return false;
 		}
 
-		// Check for valid semester
-		if (empty($this->syllabus_id)) {
-			$this->setError(JText::_('COM_ESCHOOL_ERROR_SYLLABUS_ID'));
-			return false;
-		}
-
-		// Check for valid semester
-		if (empty($this->student_id)) {
-			$this->setError(JText::_('COM_ESCHOOL_ERROR_STUDENT_ID'));
-			return false;
-		}
-				
 		return true;
 	}
 

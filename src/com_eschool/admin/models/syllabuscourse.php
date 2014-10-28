@@ -1,18 +1,19 @@
 <?php
 defined('_JEXEC') or die;
+
 jimport('joomla.application.component.modeladmin');
 
 /**
- * Registration model.
+ * Syllabuscourse model.
  *
  * @package     ESchool
  * @subpackage  com_eschool
  * @since       1.0
  */
-class EschoolModelRegistration extends JModelAdmin
+class EschoolModelSyllabuscourse extends JModelAdmin
 {
 	/**
-	 * Method to get the Registration form.
+	 * Method to get the Syllabuscourse form.
 	 *
 	 * @param   array    $data      An optional array of data for the form to interogate.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
@@ -37,7 +38,7 @@ class EschoolModelRegistration extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a Registration.
+	 * Method to get a Syllabuscourse.
 	 *
 	 * @param   integer  $pk  An optional id of the object to get, otherwise the id from the model state is used.
 	 *
@@ -47,7 +48,10 @@ class EschoolModelRegistration extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		if ($result = parent::getItem($pk)) {
-
+			if (empty($result->id)) {
+				$syllabus_id = JFactory::getApplication()->input->getCmd('syllabus_id', null);
+				$result->syllabus_id = $syllabus_id;
+			}
 			// Convert the created and modified dates to local user time for display in the form.
 			jimport('joomla.utilities.date');
 			$tz	= new DateTimeZone(JFactory::getApplication()->getCfg('offset'));
@@ -55,7 +59,7 @@ class EschoolModelRegistration extends JModelAdmin
 			if (intval($result->created)) {
 				$date = new JDate($result->created);
 				$date->setTimezone($tz);
-				$result->created = $date->toSql(true);
+				$result->created = $date->toMySQL(true);
 			}
 			else {
 				$result->created = null;
@@ -64,7 +68,7 @@ class EschoolModelRegistration extends JModelAdmin
 			if (intval($result->modified)) {
 				$date = new JDate($result->modified);
 				$date->setTimezone($tz);
-				$result->modified = $date->toSql(true);
+				$result->modified = $date->toMySQL(true);
 			}
 			else {
 				$result->modified = null;
@@ -85,9 +89,7 @@ class EschoolModelRegistration extends JModelAdmin
 	protected function getReorderConditions($table = null)
 	{
 		$condition = array(
-			'symester_id = '.(int) $table->semester_id,
-			'syllabus_id = '.(int) $table->syllabus_id,
-			'student_id = '.(int) $table->student_id
+			'syllabus_id = '.(int) $table->syllabus_id
 		);
 
 		return $condition;
@@ -103,7 +105,7 @@ class EschoolModelRegistration extends JModelAdmin
 	 * @return  JTable  A database object
 	 * @since   1.0
 	 */
-	public function getTable($type = 'Registration', $prefix = 'EschoolTable', $config = array())
+	public function getTable($type = 'Syllabuscourse', $prefix = 'EschoolTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -139,7 +141,7 @@ class EschoolModelRegistration extends JModelAdmin
 	protected function preprocessForm(JForm $form, $data, $group='content')
 	{
 		$user = JFactory::getUser();
-		$statesFields = array('state');
+		$statesFields = array('published');
 		if ( !($user->authorise('core.edit.state', 'com_eschool')) ) {
 			foreach($stateFields as $field) {
 				$form->setFieldAttribute($field, 'disabled', 'true');
@@ -162,14 +164,6 @@ class EschoolModelRegistration extends JModelAdmin
 	{
 		jimport('joomla.filter.output');
 
-		// Prepare the alias.
-		$table->alias = JApplication::stringURLSafe($table->alias);
-
-		// If the alias is empty, prepare from the value of the title.
-		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->semester_id.'-'.$table->syllabus_id.'-'.$table->student_id);
-		}
-
 		if (empty($table->id)) {
 			// For a new record.
 
@@ -178,10 +172,8 @@ class EschoolModelRegistration extends JModelAdmin
 				$db		= JFactory::getDbo();
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
-				$query->from('#__eschool_registrations');
-				$query->where('semester_id = '.(int) $table->semester_id);
+				$query->from('#__eschool_syllabus_courses');
 				$query->where('syllabus_id = '.(int) $table->syllabus_id);
-				$query->where('student_id = '.(int) $table->student_id);
 				
 				$max = (int) $db->setQuery($query)->loadResult();
 				
@@ -192,33 +184,6 @@ class EschoolModelRegistration extends JModelAdmin
 
 				$table->ordering = $max + 1;
 			}
-		}
-
-		// Clean up keywords -- eliminate extra spaces between phrases
-		// and cr (\r) and lf (\n) characters from string
-		if (!empty($this->metakey)) {
-			// Only process if not empty.
-
-			// array of characters to remove.
-			$strip = array("\n", "\r", '"', '<', '>');
-			
-			// Remove bad characters.
-			$clean = JString::str_ireplace($strip, ' ', $this->metakey); 
-
-			// Create array using commas as delimiter.
-			$oldKeys = explode(',', $clean);
-			$newKeys = array();
-			
-			foreach ($oldKeys as $key)
-			{
-				// Ignore blank keywords
-				if (trim($key)) {
-					$newKeys[] = trim($key);
-				}
-			}
-
- 			// Put array back together, comma delimited.
- 			$this->metakey = implode(', ', $newKeys);
 		}
 	}
 }
