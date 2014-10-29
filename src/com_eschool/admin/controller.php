@@ -17,7 +17,7 @@ class EschoolController extends JControllerLegacy
 	 * @since   1.0
 	 */
 	
-	protected $default_view = 'students';
+	protected $default_view = 'cpanel';
 	
 	function display($cachable = false, $urlparams = false)
 	{
