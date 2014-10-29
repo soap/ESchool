@@ -42,6 +42,12 @@ class EschoolHelper
 	{
 		
 		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_CPANEL'),
+			'index.php?option=com_eschool&view=cpanel',
+			$vName == 'cpanel'
+		);
+		
+		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_COURSEGROUPS'),
 			'index.php?option=com_eschool&view=coursegroups',
 			$vName == 'coursegroups'
@@ -118,5 +124,38 @@ class EschoolHelper
 		
 		return $result;
 	}
-
+	
+	public function getRegDocNumber($book_number, $doc_number)
+	{
+		$prefix = 'REG';
+		$runningDigits = 4;
+		
+		return $book_number.str_pad($doc_number, $runningDigits, '0', STR_PAD_LEFT);
+	}
+	
+	static function quickiconButton( $link, $image, $text )
+	{
+		$lang		= JFactory::getLanguage();
+		$application =  JFactory::getApplication();
+		$template	= $application->getTemplate();
+		$attribs = array();
+		$float = ($lang->isRTL()) ? 'right' : 'left';
+		
+		$html = array();
+		$html[] = '<div style="float:'.$float.'">';
+		$html[] = '<div class="icon">';
+		$html[] = '<a href="'.$link.'">';
+		$html[] = JHtml::_('image', 'com_eschool/'.$image, $text, $attribs, true, false);
+		$html[] = '<span>'.$text.'</span></a>';
+		$html[] = '</div>';
+		$html[] = '</div>';
+		
+		return implode("\n", $html);
+	}
+	 	
+	static function getVersion()
+	{
+		$manifest = JFactory::getXML(JPATH_COMPONENT_ADMINISTRATOR.'/eschool.xml' );
+		return $manifest->version;
+	}
 }
