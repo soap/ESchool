@@ -46,7 +46,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<th width="1%">
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
 				</th>
-				<th width="5%">
+				<th width="10%">
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_REGISTRATION_DOC_NUMBER', 'a.book_number', $listDirn, $listOrder); ?>
+				</th>
+				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_ACADEMIC_YEAR', 'sm.academic_year', $listDirn, $listOrder); ?>	
 				</th>
 				<th width="5%">
@@ -56,7 +59,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_STUDENT', 'st.fullname', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
@@ -97,20 +100,14 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 				</td>
 				<td class="center">
-					<?php echo $this->escape($item->academic_year)?>
-				</td>
-				<td class="center">
-					<?php echo $this->escape($item->academic_period)?>
-				</td>
-				<td>
 					<?php if ($item->checked_out) : ?>
 						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'registrations.', $canCheckin); ?>
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=registration.edit&id='.$item->id);?>">
-						<?php echo $this->escape($item->fullname); ?></a>
+						<?php echo EschoolHelper::getRegDocNumber($item->book_number, $item->doc_number)?></a>
 					<?php else : ?>
-						<?php echo $this->escape($item->fullname); ?>
+						<?php echo EschoolHelper::getRegDocNumber($item->book_number, $item->doc_number)?>
 					<?php endif; ?>
 					<p class="smallsub">
 						<?php if (empty($item->note)) : ?>
@@ -118,6 +115,16 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 						<?php else : ?>
 							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE', $this->escape($item->alias), $this->escape($item->note));?>
 						<?php endif; ?></p>
+					
+				</td>
+				<td class="center">
+					<?php echo $this->escape($item->academic_year)?>
+				</td>
+				<td class="center">
+					<?php echo $this->escape($item->academic_period)?>
+				</td>
+				<td>
+					<?php echo $this->escape($item->fullname); ?>
 				</td>
 
 				<td class="center">

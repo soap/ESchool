@@ -12,6 +12,39 @@ jimport('joomla.application.component.modellist');
 class EschoolModelRegistrations extends JModelList
 {
 	/**
+	 * Constructor override.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @return  EschoolModelRegistrations
+	 * @since   1.0
+	 * @see     JModelList
+	 */
+
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'id', 'a.id',
+				'a.book_number', 'a.doc_number',
+				'sm.academic_year', 'sm.academic_period',
+				'alias', 'a.alias',
+				'checked_out', 'a.checked_out',
+				'checked_out_time', 'a.checked_out_time',
+				'published', 'a.published',
+				'access', 'a.access', 'access_level',
+				'ordering', 'a.ordering',
+				'language', 'a.language',
+				'created', 'a.created',
+				'created_by', 'a.created_by',
+				'modified', 'a.modified',
+				'modified_by', 'a.modified_by',
+			);
+		}
+		parent::__construct($config);
+	}
+	
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -24,6 +57,22 @@ class EschoolModelRegistrations extends JModelList
 	 */
 	protected function populateState($ordering = 'student_id', $direction = 'asc')
 	{
+		// Initialise variables.
+		$app = JFactory::getApplication();
+
+		$value = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+		$this->setState('filter.search', $value);
+
+		$value = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', 0, 'int');
+		$this->setState('filter.access', $value);
+
+		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $value);
+
+		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
+		$this->setState('filter.language', $value);
+
+
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
 	}
@@ -44,7 +93,8 @@ class EschoolModelRegistrations extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.alias, a.student_id, a.semester_id, a.syllabus_id, '.
+				'a.id, a.book_number, a.doc_number, a.alias, ' .
+				'a.student_id, a.semester_id, a.syllabus_id, ' .
 				'a.checked_out, a.checked_out_time,' .
 				'a.published, a.access, a.created, a.ordering'
 			)
@@ -71,12 +121,45 @@ class EschoolModelRegistrations extends JModelList
 		$query->select('ua.name AS author_name');
 		$query->join('LEFT', '#__users AS ua ON ua.id = a.created_by');
 
+				// Filter by search in title
+		$search = $this->getState('filter.search');
+		if (!empty($search)) {
+			if (stripos($search, 'id:') === 0) {
+				$query->where('a.id = '.(int) substr($search, 3));
+			} else {
+				$search = $db->Quote('%'.$db->getEscaped($search, true).'%');
+				$query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
+			}
+		}
+
+		// Filter by access level.
+		if ($access = $this->getState('filter.access')) {
+			$query->where('a.access = ' . (int) $access);
+		}
+
+		// Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('a.published = ' . (int) $published);
+		} else if ($published === '') {
+			$query->where('(a.published = 0 OR a.published = 1)');
+		}
+
+
+		// Filter on the language.
+		if ($language = $this->getState('filter.language')) {
+			$query->where('a.language = '.$db->quote($language));
+		}
+
+
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
-
-		$query->order($db->getEscaped($orderCol.' '.$orderDirn));
-
+		if ($orderCol == 'a.book_number') {
+			$query->order($db->getEscaped($orderCol.' '.$orderDirn.', a.doc_number '.$orderDirn));	
+		}else {
+			$query->order($db->getEscaped($orderCol.' '.$orderDirn));
+		}
 		return $query;
 	}
 }
