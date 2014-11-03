@@ -221,4 +221,71 @@ class EschoolModelRegistration extends JModelAdmin
  			$this->metakey = implode(', ', $newKeys);
 		}
 	}
+	
+	public function save($data) 
+	{
+		if (parent::save($data)) {
+			$id = (int)$this->getState($this->getName().'.id');
+			
+			$db = $this->getDbo();
+			$query = $db->getQuery(true);
+			
+			$query->select('semester_id, syllabus_id, student_id')
+				->from('#__eschool_registrations')
+				->where('id='.$id);
+			$db->setQuery($query);
+			$regData = $db->loadObject();
+			var_dump($regData);
+			
+			$query->clear();
+			$query->select('COUNT(*)')
+				->from('#__eschool_registration_records')
+				->where('registration_id = '.$id);
+			$db->setQuery($query);
+			
+			if ($db->loadResult() == 0) {
+				$query->clear();
+				$query->select('academic_year, academic_period, class_level_id')
+					->from('#__eschool_semesters')
+					->where('id='.(int)$regData->semester_id);
+				$db->setQuery($query);
+				
+				$semesterData = $db->loadObject();
+				if ($semesterData == NULL) {
+					return true;
+				}
+				
+				$query->clear();
+				$query->select('course_id')
+					->from('#__eschool_syllabus_courses')
+					->where('syllabus_id='.$regData->syllabus_id)
+					->where('class_level_id='.$semesterData->class_level_id)
+					->where('academic_term='.$semesterData->academic_period);				
+				$db->setQuery($query);
+				
+				$rows = $db->loadObjectList();
+				if ($rows == NULL) {
+					echo $db->getQuery();
+					echo $db->getErrorMsg();
+					jexit();
+				}
+				$data = array(
+						'registration_id'=>$id, 'semester_id'=>$regData->semester_id, 'syllabus_id'=>$regData->syllabus_id,
+						'state'=>1
+				);
+				
+				foreach($rows as $row) {
+					$data['course_id'] = $row->course_id;
+					$table = JTable::getInstance('Registrationrecord', 'EschoolTable');
+					$table->bind($data);
+					$table->check();
+					$table->store();
+				}			
+			}
+			
+			return true;	
+		}else{
+			return false;
+		}
+	}
 }
