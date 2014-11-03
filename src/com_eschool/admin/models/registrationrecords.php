@@ -1,22 +1,23 @@
 <?php
 defined('_JEXEC') or die;
+
 jimport('joomla.application.component.modellist');
 
 /**
- * Registrations model.
+ * Registrationrecords model.
  *
- * @package     E-School Management
+ * @package     ESchool
  * @subpackage  com_eschool
  * @since       1.0
  */
-class EschoolModelRegistrations extends JModelList
+class EschoolModelRegistrationrecords extends JModelList
 {
 	/**
 	 * Constructor override.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @return  EschoolModelRegistrations
+	 * @return  EschoolModelRegistrationrecords
 	 * @since   1.0
 	 * @see     JModelList
 	 */
@@ -26,12 +27,11 @@ class EschoolModelRegistrations extends JModelList
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
 				'id', 'a.id',
-				'a.book_number', 'a.doc_number',
-				'sm.academic_year', 'sm.academic_period',
-				'alias', 'a.alias',
+				'course_title', 'c.title',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
-				'published', 'a.published',
+				'catid', 'a.catid', 'category_title',
+				'published', 'a.state',
 				'access', 'a.access', 'access_level',
 				'ordering', 'a.ordering',
 				'language', 'a.language',
@@ -55,7 +55,7 @@ class EschoolModelRegistrations extends JModelList
 	 * @return  void
 	 * @since   1.0
 	 */
-	protected function populateState($ordering = 'student_id', $direction = 'asc')
+	protected function populateState($ordering = 'syllabus_id', $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -66,13 +66,16 @@ class EschoolModelRegistrations extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $value);
 
-		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $value);
+		$value = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_state', '');
+		$this->setState('filter.state', $value);
+
+		$value = $app->getUserStateFromRequest($this->context.'.filter.registration_id', 'filter_registration_id');
+		$this->setState('filter.registration_id', $value);
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $value);
 
-
+		
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
 	}
@@ -93,23 +96,21 @@ class EschoolModelRegistrations extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.book_number, a.doc_number, a.alias, ' .
-				'a.student_id, a.semester_id, a.syllabus_id, ' .
-				'a.checked_out, a.checked_out_time,' .
-				'a.published, a.access, a.created, a.ordering,'.
-				'(SELECT COUNT(*) FROM #__eschool_registration_records WHERE registration_id=a.id) AS total_reg_courses'
+				'a.id, a.registration_id, a.syllabus_id, a.checked_out, a.checked_out_time, ' .
+				'a.state, a.access, a.created, a.ordering, a.language'
 			)
 		);
-		$query->from('#__eschool_registrations AS a');
+		$query->from('#__eschool_registration_records AS a');
 
-		// Join over semester data
-		$query->select('sm.academic_year, sm.academic_period, sm.class_level_id as class_level');
-		$query->join('LEFT', '#__eschool_semesters AS sm ON sm.id=a.semester_id');
 		
-		// Join over student data
-		$query->select('st.student_code, st.first_name, st.last_name, CONCAT(st.first_name,\' \', st.last_name) AS fullname');
-		$query->join('LEFT', '#__eschool_students AS st ON st.id=a.student_id');
-				
+		// Join over course
+		$query->select('c.title as course_title, c.course_code as course_code');
+		$query->join('LEFT', '#__eschool_courses AS c ON c.id=a.course_id');
+		
+		// Join over the language
+		$query->select('l.title AS language_title');
+		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
+
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
@@ -122,7 +123,7 @@ class EschoolModelRegistrations extends JModelList
 		$query->select('ua.name AS author_name');
 		$query->join('LEFT', '#__users AS ua ON ua.id = a.created_by');
 
-				// Filter by search in title
+		// Filter by search in title
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			if (stripos($search, 'id:') === 0) {
@@ -139,28 +140,31 @@ class EschoolModelRegistrations extends JModelList
 		}
 
 		// Filter by published state
-		$published = $this->getState('filter.published');
+		$published = $this->getState('filter.state');
 		if (is_numeric($published)) {
-			$query->where('a.published = ' . (int) $published);
+			$query->where('a.state = ' . (int) $published);
 		} else if ($published === '') {
-			$query->where('(a.published = 0 OR a.published = 1)');
+			$query->where('(a.state = 0 OR a.state = 1)');
 		}
 
+		// Filter by a single or group of categories.
+		$registrationId = $this->getState('filter.registration_id');
+		if (is_numeric($registrationId)) {
+			$query->where('a.registration_id = '.(int) $registrationId);
+		}
 
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
 			$query->where('a.language = '.$db->quote($language));
 		}
 
-
+		
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
-		if ($orderCol == 'a.book_number') {
-			$query->order($db->getEscaped($orderCol.' '.$orderDirn.', a.doc_number '.$orderDirn));	
-		}else {
-			$query->order($db->getEscaped($orderCol.' '.$orderDirn));
-		}
+
+		$query->order($db->getEscaped($orderCol.' '.$orderDirn));
+
 		return $query;
 	}
 }

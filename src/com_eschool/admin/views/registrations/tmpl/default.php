@@ -59,6 +59,9 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_STUDENT', 'st.fullname', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_REGISTRATION_TOTAL_COURSES', 'total_reg_courses', $listDirn, $listOrder);?>
+				</th>
+				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap">
@@ -126,7 +129,11 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<td>
 					<?php echo $this->escape($item->fullname); ?>
 				</td>
-
+				<td class="center">
+					<a href="<?php echo JRoute::_('index.php?option=com_eschool&view=registrationrecords&filter_registration_id='.$item->id);?>">
+					<?php echo $this->escape($item->total_reg_courses)?>
+					</a>
+				</td>
 				<td class="center">
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'registrations.', $canChange); ?>
 				</td>

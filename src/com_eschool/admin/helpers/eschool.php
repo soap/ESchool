@@ -102,7 +102,15 @@ class EschoolHelper
 			'index.php?option=com_eschool&view=registrations',
 			$vName == 'registrations'
 		);	
-		
+
+		if ($vName == 'registrationrecords') {
+			JSubMenuHelper::addEntry(
+				JText::_('COM_ESCHOOL_SUBMENU_REGISTRATION_RECORDS'),
+				'index.php?option=com_eschool&view=registrationrecords',
+				true
+			);
+		}
+				
 		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_RAWSCORES'),
 			'index.php?option=com_eschool&view=rawscores',

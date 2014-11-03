@@ -125,7 +125,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo $this->escape($item->classlevel)?>
 				</td>
 				<td class="center">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'students.', $canChange); ?>
+					<?php echo JHtml::_('jgrid.published', $item->state, $i, 'students.', $canChange); ?>
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>
