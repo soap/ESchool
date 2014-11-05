@@ -109,13 +109,25 @@ class EschoolHelper
 				'index.php?option=com_eschool&view=registrationrecords',
 				true
 			);
-		}
-				
+		};
+		
+		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_SCORINGPLANS'),
+			'index.php?option=com_eschool&view=scoringplans',
+			$vName == 'scoringplans'
+		);
+		
 		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_RAWSCORES'),
 			'index.php?option=com_eschool&view=rawscores',
 			$vName == 'rawscores'
-		);			
+		);
+
+		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_GRADES'),
+			'index.php?option=com_eschool&view=grades',
+			$vName == 'grades'
+		);
 	}
 	
 	public static function getCourseTypeTitle($value)
