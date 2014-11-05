@@ -94,7 +94,7 @@ class EschoolModelRegistrations extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.book_number, a.doc_number, a.alias, ' .
-				'a.student_id, a.semester_id, a.syllabus_id, ' .
+				'a.student_id, a.semester_id, a.class_level_id, a.syllabus_id, ' .
 				'a.checked_out, a.checked_out_time,' .
 				'a.published, a.access, a.created, a.ordering,'.
 				'(SELECT COUNT(*) FROM #__eschool_registration_records WHERE registration_id=a.id) AS total_reg_courses'
@@ -103,7 +103,7 @@ class EschoolModelRegistrations extends JModelList
 		$query->from('#__eschool_registrations AS a');
 
 		// Join over semester data
-		$query->select('sm.academic_year, sm.academic_period, sm.class_level_id as class_level');
+		$query->select('sm.academic_year, sm.academic_period');
 		$query->join('LEFT', '#__eschool_semesters AS sm ON sm.id=a.semester_id');
 		
 		// Join over student data

@@ -38,15 +38,18 @@ JHtml::_('behavior.keepalive');
 		<fieldset class="adminform">
 			<ul class="adminformlist">
 				<li>
-					<?php echo $this->form->getLabel('semester_id'); ?>
-					<?php echo $this->form->getInput('semester_id'); ?>
-				</li>
-
-				<li>
 					<?php echo $this->form->getLabel('syllabus_id'); ?>
 					<?php echo $this->form->getInput('syllabus_id'); ?>
 				</li>
 				
+				<li>
+					<?php echo $this->form->getLabel('semester_id'); ?>
+					<?php echo $this->form->getInput('semester_id'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('class_level_id'); ?>
+					<?php echo $this->form->getInput('class_level_id'); ?>
+				</li>				
 				<li>
 					<?php echo $this->form->getLabel('student_id'); ?>
 					<?php echo $this->form->getInput('student_id'); ?>

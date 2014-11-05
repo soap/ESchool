@@ -20,6 +20,19 @@
 			<option value="0">COM_ESCHOOL_OPTION_SELECT_SEMESTER</option>
 		</field>
 		
+		<field name="class_level_id"
+			type="sql"
+			query="SELECT id, title FROM #__eschool_classlevels"
+			key_field="id"
+			value_field="title"
+			label="COM_ESCHOOL_CLASSS_LEVEL_LABEL"
+			description="COM_ESCHOOL_CLASSS_LEVEL_DESC"
+			default="0"
+			class="inputbox"
+			required="true">
+			<option value="0">COM_ESCHOOL_SELECT_CLASS_LEVEL</option>
+		</field>
+				
 		<field name="syllabus_id"
 			type="syllabus"
 			label="COM_ESCHOOL_FIELD_SYLLABUS_LABEL"

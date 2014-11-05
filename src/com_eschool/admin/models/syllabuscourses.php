@@ -171,9 +171,10 @@ class EschoolModelSyllabuscourses extends JModelList
 		}
 
 		// Filter by a syllabus id.
-		$syllabus_id = $this->getState('filter.syllabus_id');
-		$query->where('a.syllabus_id = '.$syllabus_id);
-		
+		$syllabusId = $this->getState('filter.syllabus_id');
+		if (!empty($syllabusId)) {
+			$query->where('a.syllabus_id = '.$syllabusId);
+		}
 		
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');

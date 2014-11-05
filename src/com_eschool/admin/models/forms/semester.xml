@@ -16,6 +16,7 @@
 			label="COM_ESCHOOL_ACADEMIC_YEAR_LABEL"
 			description="COM_ESCHOOL_ACADEMIC_YEAR_DESC" 
 		/>
+		
 		<field name="academic_period"
 			type="list"
 			label="COM_ESCHOOL_ACADEMIC_PERIOD_LABEL"
@@ -25,18 +26,6 @@
 			<option value="1">COM_ESCHOOL_FIRST_SEMESTER</option>
 			<option value="2">COM_ESCHOOL_SECOND_SEMESTER</option>
 		</field>		
-		<field name="class_level_id"
-			type="sql"
-			query="SELECT id, title FROM #__eschool_classlevels"
-			key_field="id"
-			value_field="title"
-			label="COM_ESCHOOL_CLASSS_LEVEL_LABEL"
-			description="COM_ESCHOOL_CLASSS_LEVEL_DESC"
-			default="0"
-			class="inputbox"
-			required="true">
-			<option value="0">COM_ESCHOOL_SELECT_CLASS_LEVEL</option>
-		</field>
 
 		<field name="title"
 			type="text"

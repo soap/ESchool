@@ -63,9 +63,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_CLASS_LEVEL', 'a.class_level_id', $listDirn, $listOrder); ?>
-				</th>
 				<th width="10%" class="nowrap">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
 					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'semesters.saveorder'); ?>
@@ -123,9 +120,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td class="center">
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'semesters.', $canChange); ?>
-				</td>
-				<td class="center">
-					<?php echo $this->escape($item->class_level_title); ?>
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>

@@ -69,9 +69,6 @@ class EschoolModelSemesters extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
 
-		$value = $app->getUserStateFromRequest($this->context.'.filter.classlevel_id', 'filter_classlevel_id');
-		$this->setState('filter.classlevel_id', $value);
-
 		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $value);
 
@@ -95,15 +92,12 @@ class EschoolModelSemesters extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.title, a.alias, a.academic_year, a.academic_period, a.class_level_id, ' . 
+				'a.id, a.title, a.alias, a.academic_year, a.academic_period, ' . 
 				'a.checked_out, a.checked_out_time,' .
 				'a.published, a.access, a.created, a.ordering'
 			)
 		);
 		$query->from('#__eschool_semesters AS a');
-
-		$query->select('cl.title as class_level_title');
-		$query->join('LEFT', '#__eschool_classlevels AS cl ON cl.id=a.class_level_id');
 		
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
@@ -141,16 +135,6 @@ class EschoolModelSemesters extends JModelList
 			$query->where('(a.published = 0 OR a.published = 1)');
 		}
 
-		// Filter by a single or group of categories.
-		$classlevelId = $this->getState('filter.classlevel_id');
-		if (is_numeric($classlevelId)) {
-			$query->where('a.class_level_id = '.(int) $classlevelId);
-		}
-		else if (is_array($classlevelId)) {
-			JArrayHelper::toInteger($classlevelId);
-			$classlevelId = implode(',', $classlevelId);
-			$query->where('a.class_level_id IN ('.$classlevelId.')');
-		}
 
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {

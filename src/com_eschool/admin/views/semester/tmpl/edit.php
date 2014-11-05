@@ -54,10 +54,6 @@ JHtml::_('behavior.keepalive');
 					<?php echo $this->form->getInput('academic_period'); ?>				
 				</li>
 				<li>
-					<?php echo $this->form->getLabel('class_level_id'); ?>
-					<?php echo $this->form->getInput('class_level_id'); ?>
-				</li>
-				<li>
 					<?php echo $this->form->getLabel('registration_on'); ?>
 					<?php echo $this->form->getInput('registration_on'); ?>
 				</li>
