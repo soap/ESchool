@@ -26,8 +26,8 @@ class EschoolModelStudents extends JModelList
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
 				'id', 'a.id',
-				'title', 'a.title',
-				'alias', 'a.alias',
+				'title', 'a.title', 'full_name',
+				'alias', 'a.alias', 'syllabus_title',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'classlevel_id', 'a.classlevel_id', 'classlevel_title',
@@ -97,8 +97,8 @@ class EschoolModelStudents extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.first_name, a.last_name, a.student_code, a.entry_date, ' .
-				'CONCAT_WS(\' \',a.first_name, a.last_name) AS full_name, ' .
-				'a.state, ' .
+				'a.title, CONCAT_WS(\' \',a.first_name, a.last_name) AS full_name, ' .
+				'a.state, a.classlevel_id, ' .
 				'a.checked_out, a.checked_out_time, a.access, a.created, a.ordering'
 			)
 		);
@@ -107,8 +107,11 @@ class EschoolModelStudents extends JModelList
 		$query->select('us.username');
 		$query->join('LEFT', '#__users AS us ON us.id=a.user_id');
 		
-		$query->select('cl.title as classlevel');
+		$query->select('cl.title as classlevel_title');
 		$query->join('LEFT', '#__eschool_classlevels AS cl ON cl.id=a.classlevel_id');
+		
+		$query->select('s.title AS syllabus_title');
+		$query->join('LEFT', '#__eschool_syllabuses AS s ON s.id=a.syllabus_id');
 		
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');

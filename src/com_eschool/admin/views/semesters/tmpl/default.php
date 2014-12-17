@@ -92,7 +92,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<?php foreach ($this->items as $i => $item) :
 			$item->max_ordering = 0; //??
 			$ordering	= ($listOrder == 'a.ordering');
-			$canCreate	= $user->authorise('core.create',		'com_eschool.classlevel.'.$item->class_level_id);
+			$canCreate	= $user->authorise('core.create',		'com_eschool');
 			$canEdit	= $user->authorise('core.edit',			'com_eschool.semester.'.$item->id);
 			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
 			$canChange	= $user->authorise('core.edit.state',	'com_eschool.semester.'.$item->id) && $canCheckin;

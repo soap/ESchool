@@ -80,14 +80,10 @@ class EschoolViewRawscores extends JViewLegacy
 		if ($canDo->get('core.edit.state')) {
 			JToolBarHelper::publishList('rawscores.publish', 'JTOOLBAR_PUBLISH');
 			JToolBarHelper::unpublishList('rawscores.unpublish', 'JTOOLBAR_UNPUBLISH');
-			JToolBarHelper::archiveList('rawscores.archive','JTOOLBAR_ARCHIVE');
 		}
 
-		if ($state->get('filter.published') == -2 && $canDo->get('core.delete')) {
-			JToolBarHelper::deleteList('', 'rawscores.delete','JTOOLBAR_EMPTY_TRASH');
-		} 
-		else if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::trash('rawscores.trash','JTOOLBAR_TRASH');
+		if ($canDo->get('core.edit.state')) {
+			JToolBarHelper::trash('rawscores.delete','JTOOLBAR_DELETE');
 		}
 
 	}

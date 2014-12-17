@@ -50,8 +50,13 @@ JHtml::_('behavior.keepalive');
 				<li>
 					<?php echo $this->form->getLabel('gender'); ?>
 					<?php echo $this->form->getInput('gender'); ?>
+				</li>															
+				
+				<li>
+					<?php echo $this->form->getLabel('title'); ?>
+					<?php echo $this->form->getInput('title'); ?>
 				</li>
-															
+								
 				<li>
 					<?php echo $this->form->getLabel('first_name'); ?>
 					<?php echo $this->form->getInput('first_name'); ?>
@@ -66,13 +71,20 @@ JHtml::_('behavior.keepalive');
 					<?php echo $this->form->getLabel('entry_date'); ?>
 					<?php echo $this->form->getInput('entry_date'); ?>
 				</li>
+				
+				<li>
+					<?php echo $this->form->getLabel('syllabus_id'); ?>
+					<?php echo $this->form->getInput('syllabus_id'); ?>
+				</li>
+				
 				<li>
 					<?php echo $this->form->getLabel('classlevel_id'); ?>
 					<?php echo $this->form->getInput('classlevel_id'); ?>
 				</li>
+				
 				<li>
-					<?php echo $this->form->getLabel('published'); ?>
-					<?php echo $this->form->getInput('published'); ?>
+					<?php echo $this->form->getLabel('state'); ?>
+					<?php echo $this->form->getInput('state'); ?>
 				</li>
 
 				<li>

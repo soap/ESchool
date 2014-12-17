@@ -74,6 +74,11 @@ class EschoolHelper
 		}
 
 		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_GRADINGS'),
+			'index.php?option=com_eschool&view=gradings',
+			$vName == 'gradings'
+		);
+		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_CLASSLEVELS'),
 			'index.php?option=com_eschool&view=classlevels',
 			$vName == 'classlevels'
@@ -116,7 +121,12 @@ class EschoolHelper
 			'index.php?option=com_eschool&view=scoringplans',
 			$vName == 'scoringplans'
 		);
-		
+
+		JSubMenuHelper::addEntry(
+			JText::_('COM_ESCHOOL_SUBMENU_EXAMS'),
+			'index.php?option=com_eschool&view=exams',
+			$vName == 'exams'
+		);		
 		JSubMenuHelper::addEntry(
 			JText::_('COM_ESCHOOL_SUBMENU_RAWSCORES'),
 			'index.php?option=com_eschool&view=rawscores',
@@ -145,7 +155,29 @@ class EschoolHelper
 		return $result;
 	}
 	
-	public function getRegDocNumber($book_number, $doc_number)
+	public static function getNameTitle($value)
+	{
+		$result = JText::_("COM_ESCHOOL_OPTION_UNKNOWN");
+
+		switch ($value) {
+			case 'boy' :
+					$result = JText::_("COM_ESCHOOL_OPTION_TITLE_BOY");
+				break;
+			case 'girl' :
+					$result = JText::_("COM_ESCHOOL_OPTION_TITLE_GIRL");
+				break;
+			case 'man' :
+					$result = JText::_("COM_ESCHOOL_OPTION_TITLE_MAN");
+				break;
+			case 'woman' :
+					$result = JText::_("COM_ESCHOOL_OPTION_TITLE_WOMAN");
+				break;
+		}
+		
+		return $result;
+	}	
+	
+	public static function getRegDocNumber($book_number, $doc_number)
 	{
 		$prefix = 'REG';
 		$runningDigits = 4;
@@ -153,7 +185,7 @@ class EschoolHelper
 		return $book_number.str_pad($doc_number, $runningDigits, '0', STR_PAD_LEFT);
 	}
 	
-	static function quickiconButton( $link, $image, $text )
+	public static function quickiconButton( $link, $image, $text )
 	{
 		$lang		= JFactory::getLanguage();
 		$application =  JFactory::getApplication();

@@ -53,6 +53,11 @@ class EschoolTableStudent extends JTable
 	 */
 	public function check()
 	{
+		if (empty($this->user_id)) {
+			$this->setError(JText::_('COM_ESCHOOL_ERROR_USER_ID'));
+			return false;
+		}
+			
 		// Check for valid name.
 		if (trim($this->first_name) === '') {
 			$this->setError(JText::_('COM_ESCHOOL_ERROR_FIRST_NAME'));
@@ -100,7 +105,7 @@ class EschoolTableStudent extends JTable
 			$this->modified	= $date;
 			$this->modified_by	= $userId;
 		}
-
+		
 		// Attempt to store the data.
 		return parent::store($updateNulls);
 	}

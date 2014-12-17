@@ -164,7 +164,25 @@ class EschoolModelRegistration extends JModelAdmin
 
 		// Prepare the alias.
 		$table->alias = JApplication::stringURLSafe($table->alias);
+		if (empty($table->book_number)) {
+			$table->book_number = date("y");
 
+			// Set ordering to the last item if not set
+			$db		= JFactory::getDbo();
+			$query	= $db->getQuery(true);
+			$query->select('MAX(doc_number)');
+			$query->from('#__eschool_registrations');
+			$query->where('book_number = '.(int) $table->book_number);
+
+			$max = (int) $db->setQuery($query)->loadResult();
+				
+			if ($error = $db->getErrorMsg()) {
+				$this->setError($error);
+				return false;
+			}
+
+			$table->doc_number = $max + 1;
+		}
 		// If the alias is empty, prepare from the value of the title.
 		if (empty($table->alias)) {
 			$table->alias = JApplication::stringURLSafe($table->semester_id.'-'.$table->syllabus_id.'-'.$table->student_id);
@@ -230,12 +248,11 @@ class EschoolModelRegistration extends JModelAdmin
 			$db = $this->getDbo();
 			$query = $db->getQuery(true);
 			
-			$query->select('semester_id, syllabus_id, student_id')
+			$query->select('semester_id, syllabus_id, student_id, class_level_id')
 				->from('#__eschool_registrations')
 				->where('id='.$id);
 			$db->setQuery($query);
 			$regData = $db->loadObject();
-			var_dump($regData);
 			
 			$query->clear();
 			$query->select('COUNT(*)')
@@ -245,7 +262,7 @@ class EschoolModelRegistration extends JModelAdmin
 			
 			if ($db->loadResult() == 0) {
 				$query->clear();
-				$query->select('academic_year, academic_period, class_level_id')
+				$query->select('academic_year, academic_period')
 					->from('#__eschool_semesters')
 					->where('id='.(int)$regData->semester_id);
 				$db->setQuery($query);
@@ -259,7 +276,7 @@ class EschoolModelRegistration extends JModelAdmin
 				$query->select('course_id')
 					->from('#__eschool_syllabus_courses')
 					->where('syllabus_id='.$regData->syllabus_id)
-					->where('class_level_id='.$semesterData->class_level_id)
+					->where('class_level_id='.$regData->class_level_id)
 					->where('academic_term='.$semesterData->academic_period);				
 				$db->setQuery($query);
 				

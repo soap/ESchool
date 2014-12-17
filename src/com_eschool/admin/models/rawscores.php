@@ -22,7 +22,7 @@ class EschoolModelRawscores extends JModelList
 	 * @return  void
 	 * @since   1.0
 	 */
-	protected function populateState($ordering = 'title', $direction = 'asc')
+	protected function populateState($ordering = 'exam_id', $direction = 'asc')
 	{
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -44,12 +44,36 @@ class EschoolModelRawscores extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.semester_id, a.student_id, a.course_id, a.checked_out, a.checked_out_time,' .
+				'a.id, a.semester_id, a.student_id, a.syllabus_course_id, a.exam_id, a.score, '. 
+				'a.checked_out, a.checked_out_time, a.language, ' .
 				'a.published, a.access, a.created, a.ordering'
 			)
 		);
 		$query->from('#__eschool_rawscores AS a');
-
+		
+		$query->select('e.title AS exam_title, scoring_plan_id, full_score, e.weight as exam_weight');
+		$query->join('LEFT', '#__eschool_exams AS e ON e.id=a.exam_id');
+		
+		$query->select('p.syllabus_course_id, p.semester_id');
+		$query->join('LEFT', '#__eschool_scoring_plans AS p ON p.id=e.scoring_plan_id');
+		
+		$query->select('s.title as semester_title, academic_year, academic_period');
+		$query->join('LEFT', '#__eschool_semesters AS s ON s.id=p.semester_id');
+		
+		$query->select('sc.course_id');
+		$query->join('LEFT', '#__eschool_syllabus_courses AS sc ON sc.id=p.syllabus_course_id');
+		
+		$query->select('c.title as course_title, course_code');
+		$query->join('LEFT', '#__eschool_courses AS c ON c.id=sc.course_id');
+		
+		$query->select('st.first_name, st.last_name, st.student_code');
+		$query->join('LEFT', '#__eschool_students AS st ON st.id=a.student_id');
+		
+		
+		// Join over the language
+		$query->select('l.title AS language_title');
+		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
+		
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');

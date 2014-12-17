@@ -41,7 +41,6 @@ JHtml::_('behavior.keepalive');
 					<?php echo $this->form->getLabel('syllabus_id'); ?>
 					<?php echo $this->form->getInput('syllabus_id'); ?>
 				</li>
-				
 				<li>
 					<?php echo $this->form->getLabel('semester_id'); ?>
 					<?php echo $this->form->getInput('semester_id'); ?>

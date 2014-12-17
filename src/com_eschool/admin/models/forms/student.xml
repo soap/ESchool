@@ -38,6 +38,17 @@
 
 		<field name="title"
 			type="list"
+			label="COM_ESCHOOL_FIELD_TITLE_LABEL"
+			description="">
+			<option value="">COM_ESCHOOL_OPTION_SELECT_TITLE</option>
+			<option value="boy">COM_ESCHOOL_OPTION_TITLE_BOY</option>
+			<option value="girl">COM_ESCHOOL_OPTION_TITLE_GIRL</option>
+			<option value="man">COM_ESCHOOL_OPTION_TITLE_MAN</option>
+			<option value="woman">COM_ESCHOOL_OPTION_TITLE_WOMAN</option>
+		</field>	
+
+		<field name="gender"
+			type="list"
 			label="COM_ESCHOOL_FIELD_GENDER_LABEL"
 			description="">
 			<option value="">COM_ESCHOOL_OPTION_SELECT_TITLE</option>
@@ -70,6 +81,12 @@
 			filter="user_utc"
 			required="true" />	
 			
+		<field name="syllabus_id"
+			type="syllabus"
+			label="COM_ESCHOOL_FIELD_SYLLABUS_LABEL"
+			description="COM_ESCHOOL_FIELD_SYLLABUS_DESC"
+			required="true"
+		/>
 		<field name="classlevel_id"
 			type="sql"
 			query="SELECT id, title FROM #__eschool_classlevels WHERE published=1"
@@ -81,6 +98,7 @@
 			required="true">
 			<option value="">COM_ESCHOOL_OPTION_SELECT_CLASSLEVEL</option>
 		</field>
+		
 		<field name="note"
 			type="text"
 			label="JFIELD_NOTE_LABEL"

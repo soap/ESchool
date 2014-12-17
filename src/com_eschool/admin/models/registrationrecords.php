@@ -55,7 +55,7 @@ class EschoolModelRegistrationrecords extends JModelList
 	 * @return  void
 	 * @since   1.0
 	 */
-	protected function populateState($ordering = 'syllabus_id', $direction = 'asc')
+	protected function populateState($ordering = 'syllabus_course_id', $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -96,16 +96,26 @@ class EschoolModelRegistrationrecords extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.registration_id, a.syllabus_id, a.checked_out, a.checked_out_time, ' .
+				'a.id, a.registration_id, a.syllabus_course_id, a.checked_out, a.checked_out_time, ' .
 				'a.state, a.access, a.created, a.ordering, a.language'
 			)
 		);
 		$query->from('#__eschool_registration_records AS a');
-
+				
+		// Join over student
+		$query->join('LEFT', '#__eschool_registrations AS r ON r.id=a.registration_id');
+		$query->select('s.title AS title, s.first_name AS first_name, s.last_name AS last_name, s.student_code AS student_code');
+		$query->join('LEFT', '#__eschool_students AS s ON s.id=r.student_id');
+		
+		
+		$query->join('LEFT', '#__eschool_syllabus_courses AS sc ON sc.id=a.syllabus_course_id');
+		
+		$query->select('sm.academic_year, sm.academic_period');
+		$query->join('LEFT', '#__eschool_semesters AS sm ON sm.id=r.semester_id');
 		
 		// Join over course
 		$query->select('c.title as course_title, c.course_code as course_code');
-		$query->join('LEFT', '#__eschool_courses AS c ON c.id=a.course_id');
+		$query->join('LEFT', '#__eschool_courses AS c ON c.id=sc.course_id');
 		
 		// Join over the language
 		$query->select('l.title AS language_title');
@@ -130,7 +140,7 @@ class EschoolModelRegistrationrecords extends JModelList
 				$query->where('a.id = '.(int) substr($search, 3));
 			} else {
 				$search = $db->Quote('%'.$db->getEscaped($search, true).'%');
-				$query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
+				$query->where('(s.first_name LIKE '.$search.' OR s.last_name LIKE '.$search.')');
 			}
 		}
 

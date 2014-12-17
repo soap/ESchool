@@ -25,7 +25,7 @@ $user = JFactory::getUser();
 		$link = "index.php?option=com_eschool&view=registrations";
 		echo EschoolHelper::quickIconButton($link,  'eschool_registration_48.png', JText::_( 'COM_ESCHOOL_REGISTRATIONS' ) );
 		
-		$link = "index.php?option=com_eschool&view=scores";
+		$link = "index.php?option=com_eschool&view=rawscores";
 		echo EschoolHelper::quickIconButton($link,  'eschool_score_48.png', JText::_( 'COM_ESCHOOL_SCORES' ) );
 		
 		
@@ -46,14 +46,14 @@ $user = JFactory::getUser();
 		.'<p>'.  $this->version .'</p>';
 
 		echo '<h3>'.  JText::_('COM_ESCHOOL_COPYRIGHT').'</h3>'
-		.'<p>© 2009 - '.  date("Y"). ' Prasit Gebsaap</p>'
-		.'<p><a href="http://www.joomlant.org/" target="_blank">www.www.joomlant.org</a></p>';
+		.'<p>© 2013 - '.  date("Y"). ' ESchool Project</p>'
+		.'<p><a href="http://www.joomlant.org/" target="_blank">www.joomlant.org</a></p>';
 
 		echo '<h3>'.  JText::_('COM_ESCHOOL_LICENSE').'</h3>'
 		.'<p><a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GPLv2</a></p>';
 		
 		echo '<h3>'.  JText::_('COM_ESCHOOL_TRANSLATION').': '. JText::_('COM_ESCHOOL_TRANSLATION_LANGUAGE_TAG').'</h3>'
-        .'<p>© 2009 - '.  date("Y"). ' '. JText::_('COM_ESCHOOL_TRANSLATOR'). '</p>'
+        .'<p>© 2013 - '.  date("Y"). ' '. JText::_('COM_ESCHOOL_TRANSLATOR'). '</p>'
         .'<p>'.JText::_('COM_ESCHOOL_TRANSLATION_SUPPORT_URL').'</p>';
 ?>
 	   </div>

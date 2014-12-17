@@ -58,10 +58,13 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
 				</th>
 				<th>
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_FULLNAME', 'fullname', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_FULLNAME', 'full_name', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_CLASSLEVEL', 'classlevel', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_CLASSLEVEL', 'classlevel_title', $listDirn, $listOrder); ?>
+				</th>
+				<th width="10%">
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SYLLABUS', 'syllabus_title', $listDirn, $listOrder);?>
 				</th>				
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
@@ -110,7 +113,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_eschool&task=student.edit&id='.$item->id);?>">
-					<?php echo $this->escape($item->full_name); ?></a>
+					<?php echo $this->escape(EschoolHelper::getNameTitle($item->title) . ' '.$item->full_name); ?></a>
 					<?php else : ?>
 						<?php echo $this->escape($item->full_name); ?>
 					<?php endif; ?>
@@ -122,20 +125,23 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 						<?php endif; ?></p>
 				</td>
 				<td class="center">
-					<?php echo $this->escape($item->classlevel)?>
+					<?php echo $this->escape($item->classlevel_title)?>
+				</td>
+				<td class="center">
+					<?php echo $this->escape($item->syllabus_title)?>
 				</td>
 				<td class="center">
 					<?php echo JHtml::_('jgrid.published', $item->state, $i, 'students.', $canChange); ?>
 				</td>
 				<td class="order">
 					<?php if ($canChange) : ?>
-						<!-- <span><?php echo $this->pagination->orderUpIcon($i,
+						<?php echo $this->pagination->orderUpIcon($i,
 							($item->classlevel_id == @$this->items[$i-1]->classlevel_id),
-							'students.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>-->
-						<!-- <span><?php echo $this->pagination->orderDownIcon($i,
+							'students.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
+						<?php echo $this->pagination->orderDownIcon($i,
 							$this->pagination->total,
 							($item->classlevel_id == @$this->items[$i+1]->classlevel_id),
-							'students.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>-->
+							'students.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?>
 						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
 					<?php else : ?>
