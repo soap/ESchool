@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="content">
+	<name>PLG_CONTENT_ESSCORE</name>
+	<author>ESchool Project</author>
+	<creationDate>November 2014</creationDate>
+	<copyright>Copyright (C) 2013 - 2014 ESchool Project. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>admin@joomlant.com</authorEmail>
+	<authorUrl>www.joomlant.com</authorUrl>
+	<version>2.5.0</version>
+	<description>PLG_CONTENT_ESSCORE_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="esscore">esscore.php</filename>
+		<filename>index.html</filename>
+		<folder>language</folder>
+	</files>
+</extension>
