@@ -39,7 +39,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 	</fieldset>
 	<div class="clr"> </div>
 
-
 	<table class="adminlist">
 		<thead>
 			<tr>
@@ -117,7 +116,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td class="center">
 					<?php echo $this->escape($item->credit)?>
-				</td>'
+				</td>
 				<td class="center">
 					<a href="<?php echo JRoute::_('index.php?option=com_eschool&view=syllabuscourses&filter.syllabus_id='.$item->id);?>">
 					<?php echo $this->escape($item->total_courses)?>
