@@ -31,8 +31,8 @@ class EschoolModelGrades extends JModelList
 				'alias', 'a.alias',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
-				'semester_title', 'a.scoring_progress', 'a.scoring_percent','a.scoring_grade',
-				'course_title',
+				'semester_title', 'a.scoring_progress', 'a.scoring_percent',
+				'course_title', 'g.pointing', 'g.title',
 				'published', 'a.state', 'a.published',
 				'access', 'a.access', 'access_level',
 				'ordering', 'a.ordering',
@@ -108,6 +108,7 @@ class EschoolModelGrades extends JModelList
 		// Join over student
 		$query->join('LEFT', '#__eschool_registrations AS r ON r.id=a.registration_id');
 		$query->select('s.title AS title, s.first_name AS first_name, s.last_name AS last_name, s.student_code AS student_code');
+		
 		$query->join('LEFT', '#__eschool_students AS s ON s.id=r.student_id');		
 
 		$query->select('sm.title as semester_title, sm.academic_year, sm.academic_period');
@@ -141,9 +142,12 @@ class EschoolModelGrades extends JModelList
 		if (!empty($search)) {
 			if (stripos($search, 'id:') === 0) {
 				$query->where('a.id = '.(int) substr($search, 3));
-			} else {
-				$search = $db->Quote('%'.$db->getEscaped($search, true).'%');
+			} else if (stripos($search, 'name:') === 0) {
+				$search = $db->quote('%'.$db->getEscaped(substr($search, 5), true).'%');
 				$query->where('(s.first_name LIKE '.$search.' OR s.last_name LIKE '.$search.')');
+			} else if (stripos($search, 'course:') === 0) {
+				$search = $db->quote('%'.$db->getEscaped(substr($search, 7), true).'%');
+				$query->where('c.title LIKE '.$search);
 			}
 		}
 
@@ -168,19 +172,23 @@ class EschoolModelGrades extends JModelList
 		else if (is_array($courseId)) {
 			JArrayHelper::toInteger($courseId);
 			$courseId = implode(',', $courseId);
-			$query->where('a.course_id IN ('.$courseId.')');
+			$query->where('a.syllabus_course_id IN ('.$courseId.')');
 		}
 
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
 			$query->where('a.language = '.$db->quote($language));
 		}
-
+				
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
-
-		$query->order($db->getEscaped($orderCol.' '.$orderDirn));
+		
+		if ($orderCol == 'fullname' || $orderCol == 'full_name') {
+			$query->order('s.first_name '.$orderDirn, ',s.last_name '.$orderDirn);
+		}else{
+			$query->order($db->getEscaped($orderCol.' '.$orderDirn));
+		}
 
 		return $query;
 	}

@@ -73,7 +73,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SCORING_PERCENT', 'a.scoring_percent', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SCORING_GRADE', 'a.scoring_grade', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SCORING_GRADE', 'g.pointing', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
