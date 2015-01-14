@@ -23,6 +23,11 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 
 		</div>
 		<div class="filter-select fltrt">
+			<select name="filter_regsemester" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_SEMESTER');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('regsemester.options'),
+					'value', 'text', $this->state->get('filter.regsemester'), true);?>
+			</select>
 			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
 				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'),

@@ -67,6 +67,9 @@ class EschoolModelGrades extends JModelList
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $value);
+		
+		$value = $app->getUserStateFromRequest($this->context.'.filter.regsemester', 'filter_regsemester', '');
+		$this->setState('filter.regsemester', $value);
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
@@ -155,7 +158,11 @@ class EschoolModelGrades extends JModelList
 		if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = ' . (int) $access);
 		}
-
+		
+		// Filter by register semester.
+		if ($regSemester = (int)$this->getState('filter.regsemester')) {
+			$query->where('a.semester_id = ' . (int) $regSemester);
+		}
 		// Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
