@@ -145,7 +145,7 @@ class plgContentEsscore extends JPlugin
 		$query->clear();
 		$query->select('a.id');
 		$query->from('#__eschool_gradings AS a');
-		$query->where('a.min_score>='.$percent);
+		$query->where($percent .' >= a.min_score');
 		$query->order('a.min_score DESC');
 
 		$db->setQuery($query);
