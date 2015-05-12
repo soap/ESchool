@@ -158,7 +158,7 @@ class EschoolModelRegistration extends JModelAdmin
 	 * @return  boolean  True if successful, otherwise false and the error is set.
 	 * @since   1.0
 	 */
-	protected function prepareTable($table)
+	protected function prepareTable(&$table)
 	{
 		jimport('joomla.filter.output');
 
@@ -273,7 +273,7 @@ class EschoolModelRegistration extends JModelAdmin
 				}
 				
 				$query->clear();
-				$query->select('course_id')
+				$query->select('id')
 					->from('#__eschool_syllabus_courses')
 					->where('syllabus_id='.$regData->syllabus_id)
 					->where('class_level_id='.$regData->class_level_id)
@@ -292,7 +292,7 @@ class EschoolModelRegistration extends JModelAdmin
 				);
 				
 				foreach($rows as $row) {
-					$data['course_id'] = $row->course_id;
+					$data['syllabus_course_id'] = $row->id;
 					$table = JTable::getInstance('Registrationrecord', 'EschoolTable');
 					$table->bind($data);
 					$table->check();

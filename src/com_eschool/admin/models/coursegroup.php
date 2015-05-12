@@ -156,7 +156,7 @@ class EschoolModelCoursegroup extends JModelAdmin
 	 * @return  boolean  True if successful, otherwise false and the error is set.
 	 * @since   1.0
 	 */
-	protected function prepareTable($table)
+	protected function prepareTable(&$table)
 	{
 		jimport('joomla.filter.output');
 

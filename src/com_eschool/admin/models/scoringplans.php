@@ -152,7 +152,7 @@ class EschoolModelScoringplans extends JModelList
 				$query->where('a.id = '.(int) substr($search, 3));
 			} else {
 				$search = $db->Quote('%'.$db->getEscaped($search, true).'%');
-				$query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
+				$query->where('(c.title LIKE '.$search.' OR c.alias LIKE '.$search.')');
 			}
 		}
 

@@ -27,7 +27,7 @@
 			default="0"
 			class="inputbox" />
 				
-		<field name="course_id"
+		<field name="syllabus_course_id"
 			type="syllabuscourse"
 			label="COM_ESCHOOL_COURSE_LABEL"
 			description="COM_ESCHOOL_COURSE_DESC"

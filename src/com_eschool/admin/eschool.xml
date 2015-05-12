@@ -2,13 +2,13 @@
 <!-- $Id$ -->
 <extension type="component" version="2.5.0" method="upgrade">
 	<name>COM_ESCHOOL</name>
-	<author>Prasit Gebsaap</author>
+	<author>ESchool Project Team</author>
 	<creationDate>Feb 2014</creationDate>
-	<copyright>Copyright 2014 by Prasit Gebsaap. All rights reserved.	</copyright>
+	<copyright>Copyright 2014 by ESchool Project Team. All rights reserved.	</copyright>
 	<license>GNU General Public License version 2 or later.</license>
-	<authorEmail>soap@joomlant.com</authorEmail>
-	<authorUrl>www.joomlant.com</authorUrl>
-	<version>1.0.0-RC1</version>
+	<authorEmail>developer@eschool.com</authorEmail>
+	<authorUrl>www.eschool.com</authorUrl>
+	<version>1.0.0-RC2</version>
 	<description>COM_ESCHOOL_XML_DESCRIPTION</description>
 	<files folder="site">
         <filename>eschool.php</filename>

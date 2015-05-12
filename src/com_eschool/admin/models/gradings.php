@@ -59,7 +59,7 @@ class EschoolModelGradings extends JModelList
 	 */
 	protected function populateState($ordering = 'pointing', $direction = 'desc')
 	{
-				// Initialise variables.
+		// Initialise variables.
 		$app = JFactory::getApplication();
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');

@@ -201,8 +201,9 @@ class JFormFieldSyllabuscourse extends JFormField
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('a.title, a.course_code')
-		->from('#__eschool_courses AS a')
+		$query->select('c.title, c.course_code')
+		->from('#__eschool_syllabus_courses AS a')
+		->join('LEFT', '#__eschool_courses AS c ON c.id=a.course_id')
 		->where('a.id = ' . $db->quote($this->value));
 
 		$db->setQuery((string) $query);

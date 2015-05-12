@@ -158,7 +158,7 @@ class EschoolModelScoringplan extends JModelAdmin
 	 * @return  boolean  True if successful, otherwise false and the error is set.
 	 * @since   1.0
 	 */
-	protected function prepareTable($table)
+	protected function prepareTable(&$table)
 	{
 		jimport('joomla.filter.output');
 
@@ -171,7 +171,7 @@ class EschoolModelScoringplan extends JModelAdmin
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
 				$query->from('#__eschool_scoring_plans');
-				$query->where('syllabus_cours_id = '.(int) $table->syllabus_course_id);
+				$query->where('syllabus_course_id = '.(int) $table->syllabus_course_id);
 				$query->where('semester_id = '.(int) $table->semester_id);
 				
 				$max = (int) $db->setQuery($query)->loadResult();
