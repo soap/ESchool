@@ -170,7 +170,7 @@ class EschoolModelGrades extends JModelList
 			$query->where('a.access = ' . (int) $access);
 		}
 		
-		// Filter by syllabus_course
+		// Filter by student
 		if ($student = $this->getState('filter.student')) {
 			$query->where('r.student_id=' . (int) $student);
 		}

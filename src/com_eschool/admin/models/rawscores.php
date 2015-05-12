@@ -12,7 +12,7 @@ jimport('joomla.application.component.modellist');
 class EschoolModelRawscores extends JModelList
 {
 	
-		/**
+	/**
 	 * Constructor override.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -28,6 +28,7 @@ class EschoolModelRawscores extends JModelList
 			$config['filter_fields'] = array(
 				'id', 'a.id',
 				'c.title', 
+				'a.exam_id','exam_title', 'a.score', 'full_score',
 				'st.first_name', 'st.last_name', 'st.student_code', 
 				'alias', 'a.alias',
 				'checked_out', 'a.checked_out',
@@ -70,9 +71,12 @@ class EschoolModelRawscores extends JModelList
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
-
-		$value = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id');
-		$this->setState('filter.category_id', $value);
+		
+		$value = $app->getUserStateFromRequest($this->context.'.filter.student', 'filter_student');
+		$this->setState('filter.student', $value);
+		
+		$value = $app->getUserStateFromRequest($this->context.'.filter.exam_id', 'filter_exam_id');
+		$this->setState('filter.exam_id', $value);
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $value);
@@ -149,6 +153,11 @@ class EschoolModelRawscores extends JModelList
 			}
 		}
 
+		// Filter by student
+		if ($student = $this->getState('filter.student')) {
+			$query->where('a.student_id=' . (int) $student);
+		}
+		
 		// Filter by access level.
 		if ($access = $this->getState('filter.access')) {
 			$query->where('a.access = ' . (int) $access);
@@ -163,14 +172,14 @@ class EschoolModelRawscores extends JModelList
 		}
 
 		// Filter by a single or group of categories.
-		$categoryId = $this->getState('filter.category_id');
-		if (is_numeric($categoryId)) {
-			$query->where('a.category_id = '.(int) $categoryId);
+		$examId = $this->getState('filter.exam_id');
+		if (is_numeric($examId)) {
+			$query->where('a.exam_id = '.(int) $examId);
 		}
-		else if (is_array($categoryId)) {
-			JArrayHelper::toInteger($categoryId);
+		else if (is_array($examId)) {
+			JArrayHelper::toInteger($examId);
 			$categoryId = implode(',', $categoryId);
-			$query->where('a.category_id IN ('.$categoryId.')');
+			$query->where('a.exam_id IN ('.$examId.')');
 		}
 
 		// Filter on the language.
@@ -186,5 +195,38 @@ class EschoolModelRawscores extends JModelList
 		$query->order($db->getEscaped($orderCol.' '.$orderDirn));
 
 		return $query;
+	}
+	
+	public function getExams()
+	{
+		$query = $this->_db->getQuery(true);
+		$query->select('e.id as value, e.title as text')
+		->from('#__eschool_exams AS e')
+		->order('e.scoring_plan_id ASC');
+		
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+		
+	}
+	
+	public function getStudents()
+	{
+		$query = $this->_db->getQuery(true);
+		$query->select('s.id, s.title, s.first_name, s.last_name, s.student_code as code')
+		->from('#__eschool_students AS s')
+		->order('s.first_name, s.last_name ASC');
+	
+		$this->_db->setQuery($query);
+		$rows = $this->_db->loadObjectList();
+		$students = array();
+		foreach($rows as $row) {
+			$student = new stdClass();
+			$student->text = EschoolHelper::getNameTitle($row->title).' '.$row->first_name.' '.$row->last_name.'('.$row->code.')';
+			$student->value = $row->id;
+			$students[] = $student;
+		}
+	
+		return $students;
+	
 	}
 }

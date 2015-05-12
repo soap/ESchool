@@ -85,7 +85,7 @@ class EschoolModelSemester extends JModelAdmin
 	protected function getReorderConditions($table = null)
 	{
 		$condition = array(
-			'class_level_id = '.(int) $table->class_level_id
+			'academic_year = '.(int) $table->academic_year
 		);
 
 		return $condition;
@@ -177,7 +177,7 @@ class EschoolModelSemester extends JModelAdmin
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
 				$query->from('#__eschool_semesters');
-				$query->where('class_level_id = '.(int) $table->class_level_id);
+				$query->where('academic_year = '.(int) $table->academic_year);
 				
 				$max = (int) $db->setQuery($query)->loadResult();
 				

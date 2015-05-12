@@ -124,11 +124,11 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<td class="order">
 					<?php if ($canChange) : ?>
 						<span><?php echo $this->pagination->orderUpIcon($i,
-							($item->class_level_id == @$this->items[$i-1]->class_level_id),
+							($item->academic_year == @$this->items[$i-1]->academic_year),
 							'semesters.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 						<span><?php echo $this->pagination->orderDownIcon($i,
 							$this->pagination->total,
-							($item->class_level_id == @$this->items[$i+1]->class_level_id),
+							($item->academic_year == @$this->items[$i+1]->academic_year),
 							'semesters.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
 						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
