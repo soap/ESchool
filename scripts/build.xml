@@ -21,6 +21,19 @@
  		
  		--> 
 
+		<!-- (conditional load stops error messages when properties file loaded by command line) -->
+		<if>
+			<available file="./build.properties" type="file" />
+			<then>
+					<property file="./build.properties" />
+			</then> 
+		</if>
+		<echo>Buidl folder is ${build.folder}</echo>
+		<!-- Define failsafe properties, if file not available -->
+        <property name="build.version" value="1.0.0 RC2" override="false" />
+		<property name="build.folder" value="./tmp/Builds" override="false" />
+
+		
 		<!-- Get the property file to define the key folder locations if available -->
 		<!-- (conditional load stops error messages when properties file loaded by command line) -->
 		<if>
@@ -29,20 +42,7 @@
 					<property file="./project.properties" />
 			</then> 
 		</if>
-
-		<!-- Define failsafe properties, if file not available -->
-        <property name="build.version" value="1.0.0 RC15" override="true" />
-		<property name="build.folder" value="./Builds" override="true" />
-
-
-		<!-- (conditional load stops error messages when properties file loaded by command line) -->
-		<if>
-			<available file="./build.properties" type="file" />
-			<then>
-					<property file="./build.properties" />
-			</then> 
-		</if>
-
+		<echo>Buidl folder is ${build.folder}</echo>
         <!-- Define failsafe properties, if file (build.properties) not available -->
         <property name="project.root" value="" override="false" />
 		<property name="repo.folder" value="." override="false" />
