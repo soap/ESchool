@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<authorEmail>developer@eschool.com</authorEmail>
 	<authorUrl>www.eschool.com</authorUrl>
-	<version>1.0.0-RC2</version>
+	<version>1.0.0-RC3</version>
 	<description>COM_ESCHOOL_XML_DESCRIPTION</description>
 	<files folder="site">
         <filename>eschool.php</filename>
