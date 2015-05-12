@@ -28,9 +28,7 @@
 					<property file="./build.properties" />
 			</then> 
 		</if>
-		<echo>Buidl folder is ${build.folder}</echo>
 		<!-- Define failsafe properties, if file not available -->
-        <property name="build.version" value="1.0.0 RC2" override="false" />
 		<property name="build.folder" value="./tmp/Builds" override="false" />
 
 		
@@ -42,8 +40,8 @@
 					<property file="./project.properties" />
 			</then> 
 		</if>
-		<echo>Buidl folder is ${build.folder}</echo>
         <!-- Define failsafe properties, if file (build.properties) not available -->
+        <property name="build.version" value="1.0.0 RC2" override="false" />
         <property name="project.root" value="" override="false" />
 		<property name="repo.folder" value="." override="false" />
 		<property name="tmp.folder" value="${build.folder}/tmp" />
