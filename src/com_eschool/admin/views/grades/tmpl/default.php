@@ -29,6 +29,24 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					'value', 'text', $this->state->get('filter.regsemester'), true);?>
 			</select>
 			
+			<select name="filter_student" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_STUDENT');?></option>
+				<?php echo JHtml::_('select.options', $this->students,
+					'value', 'text', $this->state->get('filter.student'), true);?>
+			</select>
+			
+			<select name="filter_syllabus_course" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_SYLLABUS_COURSE');?></option>
+				<?php echo JHtml::_('select.options', $this->courses,
+					'value', 'text', $this->state->get('filter.syllabus_course'), true);?>
+			</select>
+			
+			<select name="filter_grading" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_GRADING');?></option>
+				<?php echo JHtml::_('select.options', $this->gradings,
+					'value', 'text', $this->state->get('filter.grading'), true);?>
+			</select>
+			
 			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
 				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'),
@@ -106,8 +124,8 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<?php foreach ($this->items as $i => $item) :
 			$item->max_ordering = 0; //??
 			$ordering	= ($listOrder == 'a.ordering');
-			$canCreate	= $user->authorise('core.create',		'com_eschool');
-			$canEdit	= $user->authorise('core.edit',			'com_eschool.grade.'.$item->id);
+			$canCreate	= false; //$user->authorise('core.create',		'com_eschool');
+			$canEdit	= false; //$user->authorise('core.edit',			'com_eschool.grade.'.$item->id);
 			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
 			$canChange	= $user->authorise('core.edit.state',	'com_eschool.grade.'.$item->id) && $canCheckin;
 			?>

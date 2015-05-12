@@ -42,7 +42,10 @@ class EschoolViewGrades extends JViewLegacy
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
-
+		$this->gradings		= $this->get('Gradings');
+		$this->courses		= $this->get('Courses'); //Syllabus Courses
+		$this->students		= $this->get('Students');
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));

@@ -28,7 +28,9 @@ class EschoolModelGrades extends JModelList
 			$config['filter_fields'] = array(
 				'id', 'a.id',
 				'fullname', 'full_name',
-				'alias', 'a.alias',
+				'alias', 'a.alias', 
+				'student_id',
+				'grading_id', 'syllabus_course',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'semester_title', 'a.scoring_progress', 'a.scoring_percent',
@@ -68,9 +70,18 @@ class EschoolModelGrades extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $value);
 		
+		$value = $app->getUserStateFromRequest($this->context.'.filter.student', 'filter_student', '');
+		$this->setState('filter.student', $value);
+		
 		$value = $app->getUserStateFromRequest($this->context.'.filter.regsemester', 'filter_regsemester', '');
 		$this->setState('filter.regsemester', $value);
 
+		$value = $app->getUserStateFromRequest($this->context.'.filter.syllabus_course', 'filter_syllabus_course', '');
+		$this->setState('filter.syllabus_course', $value);
+		
+		$value = $app->getUserStateFromRequest($this->context.'.filter.grading', 'filter_grading', '');
+		$this->setState('filter.grading', $value);
+		
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
 
@@ -110,7 +121,7 @@ class EschoolModelGrades extends JModelList
 		
 		// Join over student
 		$query->join('LEFT', '#__eschool_registrations AS r ON r.id=a.registration_id');
-		$query->select('s.title AS title, s.first_name AS first_name, s.last_name AS last_name, s.student_code AS student_code');
+		$query->select('s.id AS student_id,s.title AS title, s.first_name AS first_name, s.last_name AS last_name, s.student_code AS student_code');
 		
 		$query->join('LEFT', '#__eschool_students AS s ON s.id=r.student_id');		
 
@@ -159,10 +170,26 @@ class EschoolModelGrades extends JModelList
 			$query->where('a.access = ' . (int) $access);
 		}
 		
+		// Filter by syllabus_course
+		if ($student = $this->getState('filter.student')) {
+			$query->where('r.student_id=' . (int) $student);
+		}
+		
+		// Filter by grading level A, B, C, ....
+		if ($grading = $this->getState('filter.grading')) {
+			$query->where('a.grading_id = ' . (int) $grading);
+		}
+		
+		// Filter by syllabus_course
+		if ($syllabusCourse = $this->getState('filter.syllabus_course')) {
+			$query->where('a.syllabus_course_id = ' . (int) $syllabusCourse);
+		}
+		
 		// Filter by register semester.
 		if ($regSemester = (int)$this->getState('filter.regsemester')) {
 			$query->where('a.semester_id = ' . (int) $regSemester);
 		}
+		
 		// Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
@@ -198,5 +225,51 @@ class EschoolModelGrades extends JModelList
 		}
 
 		return $query;
+	}
+
+	public function getGradings()
+	{
+		$query = $this->_db->getQuery(true);
+		$query->select('id AS value, title AS text')
+			->from('#__eschool_gradings')
+			->where('published=1')
+			->order('pointing DESC');
+		
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+	
+	public function getCourses()
+	{
+		$query = $this->_db->getQuery(true);
+		$query->select('sc.id AS value, c.title AS text')
+		->from('#__eschool_syllabus_courses AS sc')
+		->join('LEFT', '#__eschool_courses AS c ON c.id=sc.course_id')
+		->where('published=1')
+		->order('c.title ASC');
+	
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+	
+	public function getStudents()
+	{
+		$query = $this->_db->getQuery(true);
+		$query->select('s.id, s.title, s.first_name, s.last_name, s.student_code as code')
+		->from('#__eschool_students AS s')
+		->order('s.first_name, s.last_name ASC');
+	
+		$this->_db->setQuery($query);
+		$rows = $this->_db->loadObjectList();
+		$students = array();
+		foreach($rows as $row) {
+			$student = new stdClass();
+			$student->text = EschoolHelper::getNameTitle($row->title).' '.$row->first_name.' '.$row->last_name.'('.$row->code.')';
+			$student->value = $row->id;
+			$students[] = $student;
+		}
+		
+		return $students;
+		
 	}
 }

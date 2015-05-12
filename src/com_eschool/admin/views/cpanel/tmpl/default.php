@@ -47,7 +47,7 @@ $user = JFactory::getUser();
 
 		echo '<h3>'.  JText::_('COM_ESCHOOL_COPYRIGHT').'</h3>'
 		.'<p>© 2013 - '.  date("Y"). ' ESchool Project</p>'
-		.'<p><a href="http://www.joomlant.org/" target="_blank">www.joomlant.org</a></p>';
+		.'<p><a href="http://www.eschool.org/" target="_blank">www.eschool.org</a></p>';
 
 		echo '<h3>'.  JText::_('COM_ESCHOOL_LICENSE').'</h3>'
 		.'<p><a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GPLv2</a></p>';

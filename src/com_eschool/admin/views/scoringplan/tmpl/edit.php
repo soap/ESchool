@@ -44,8 +44,8 @@ JHtml::_('behavior.keepalive');
 				</li>
 
 				<li>
-					<?php echo $this->form->getLabel('course_id'); ?>
-					<?php echo $this->form->getInput('course_id'); ?>
+					<?php echo $this->form->getLabel('syllabus_course_id'); ?>
+					<?php echo $this->form->getInput('syllabus_course_id'); ?>
 				</li>
 								
 				<li>

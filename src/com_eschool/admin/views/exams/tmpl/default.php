@@ -8,6 +8,49 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eschool&view=exams');?>" method="post" name="adminForm">
+	<fieldset id="filter-bar">
+		<div class="filter-search fltlft">
+			<label class="filter-search-lbl" for="filter_search">
+				<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>:</label>
+			<input type="text" name="filter_search" id="filter_search"
+				value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
+				title="<?php echo JText::_('COM_ESCHOOL_EXAMS_FILTER_SEARCH_DESC'); ?>" />
+
+			<button type="submit" class="btn">
+				<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();">
+				<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+
+		</div>
+		<div class="filter-select fltrt">
+			<select name="filter_regsemester" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_SEMESTER');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('regsemester.options'),
+					'value', 'text', $this->state->get('filter.regsemester'), true);?>
+			</select>
+					
+			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'),
+					'value', 'text', $this->state->get('filter.published'), true);?>
+			</select>
+
+			<select name="filter_access" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'),
+					'value', 'text', $this->state->get('filter.access'));?>
+			</select>
+
+			<select name="filter_language" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true),
+					'value', 'text', $this->state->get('filter.language'));?>
+			</select>
+		</div>
+	</fieldset>
+	<div class="clr"> </div>
+
+	
 	<table class="adminlist">
 		<thead>
 			<tr>
@@ -17,9 +60,11 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<th>
 					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
 				</th>
+				<?php if (!$this->state->get('filter.regsemester')) :?>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SEMESTER', 'semester_title', $listDirn, $listOrder); ?>
 				</th>
+				<?php endif;?>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_COURSE', 'course_title', $listDirn, $listOrder); ?>
 				</th>
@@ -93,9 +138,11 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 							<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS_NOTE', $this->escape($item->alias), $this->escape($item->note));?>
 						<?php endif; ?></p>
 				</td>
+				<?php if (!$this->state->get('filter.regsemester')) :?>
 				<td class="center">
 					<?php echo $this->escape($item->semester_title); ?>
 				</td>				
+				<?php endif;?>
 				<td class="center">
 					<?php echo $this->escape($item->course_title); ?>
 				</td>

@@ -119,7 +119,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
                 <td>
-                    <a class="pointer" onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>('<?php echo $item->course_id; ?>', '<?php echo $this->escape(addslashes($item->course_title)); ?>','<?php echo $item->syllabus_id?>');">
+                    <a class="pointer" onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->course_title)); ?>','<?php echo $item->syllabus_id?>');">
                         <?php echo $this->escape($item->course_title); ?></a>
                 </td>
 				<td class="center">

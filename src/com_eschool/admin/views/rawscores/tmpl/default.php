@@ -15,7 +15,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
 				</th>
 				<th>
-					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'st.first_name', $listDirn, $listOrder); ?>
 				</th>
 				<th>
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SCORE', 'a.score', $listDirn, $listOrder); ?>
