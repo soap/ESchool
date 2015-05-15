@@ -103,6 +103,7 @@ class EschoolModelSyllabuscourses extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.syllabus_id, a.course_id, a.class_level_id, a.academic_term, a.credit, a.hours,' .
+				'a.checked_out, a.checked_out_time,' .
 				'a.created, a.ordering'
 			)
 		);
@@ -130,6 +131,10 @@ class EschoolModelSyllabuscourses extends JModelList
 		// Join over the users for the author.
 		$query->select('ua.name AS author_name');
 		$query->join('LEFT', '#__users AS ua ON ua.id = a.created_by');
+		
+		// Join over the users for the checked out user.
+		$query->select('uc.name AS editor');
+		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 		
 		// Filter by search in title
 		$search = $this->getState('filter.search');
