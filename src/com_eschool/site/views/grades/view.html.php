@@ -42,6 +42,10 @@ class EschoolViewGrades extends JViewLegacy
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
+		
+		if ($this->state->get('adminMode') === true) {
+			$this->setLayout('multi');
+		}
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {

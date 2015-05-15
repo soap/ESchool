@@ -28,7 +28,8 @@ class EschoolModelGrades extends JModelList
 			$config['filter_fields'] = array(
 				'id', 'a.id',
 				'fullname', 'full_name',
-				'alias', 'a.alias',
+				'alias', 'a.alias', 
+				'course_code', 'c.course_type',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'semester_title', 'a.scoring_progress', 'a.scoring_percent',
@@ -121,7 +122,7 @@ class EschoolModelGrades extends JModelList
 		$query->join('LEFT', '#__eschool_syllabus_courses AS sc ON sc.id=a.syllabus_course_id');
 		
 		// Join over course
-		$query->select('c.title as course_title, c.course_code as course_code');
+		$query->select('c.title as course_title, c.course_code as course_code, c.course_type');
 		$query->join('LEFT', '#__eschool_courses AS c ON c.id=sc.course_id');
 				
 		// Join over the language
@@ -191,6 +192,9 @@ class EschoolModelGrades extends JModelList
 		$user = JFactory::getUser();
 		if (!$user->authorise('core.admin', 'com_eschool')) {
 			$query->where('s.user_id='.(int)$user->get('id'));
+			$this->setState('adminMode', false);
+		}else{
+			$this->setState('adminMode', true);
 		}
 		
 		// Add the list ordering clause.

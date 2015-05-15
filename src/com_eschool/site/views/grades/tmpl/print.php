@@ -6,42 +6,13 @@ JHtml::_('behavior.tooltip');
 $user		= JFactory::getUser();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
-$print_url = JRoute::_('index.php?option=com_eschool&view=grades&tmpl=component&layout=print');
-$print_opt = 'width=1024,height=600,resizable=yes,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no';
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_eschool&view=grades');?>" method="post" name="adminForm">
-	<fieldset id="filter-bar">
-		<div class="filter-search fltlft">
-			<label class="filter-search-lbl" for="filter_search">
-				<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>:</label>
-			<input type="text" name="filter_search" id="filter_search"
-				value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-				title="<?php echo JText::_('COM_ESCHOOL_GRADES_FILTER_SEARCH_DESC'); ?>" />
-
-			<button type="submit" class="btn">
-				<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
-			<button type="button" class="btn" onclick="document.id('filter_search').value='';this.form.submit();">
-				<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
-			<?php if ($this->state->get('filter.regsemester', 0) > 0) :?>
-			<a class="btn button" id="print_btn" href="javascript:void(0);" onclick="window.open('<?php echo JRoute::_($print_url);?>', 'print', '<?php echo $print_opt; ?>')">
-                 <?php echo JText::_('COM_ESCHOOL_PRINT'); ?>
-            </a>
-            <?php endif;?>
-		</div>
-		<div class="filter-select fltrt">
-			<select name="filter_regsemester" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('COM_ESCHOOL_OPTION_SELECT_SEMESTER');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('regsemester.options'),
-					'value', 'text', $this->state->get('filter.regsemester'), true);?>
-			</select>
-		</div>
-	</fieldset>
-	<div class="clr"> </div>
+<form action="<?php echo JRoute::_('index.php?option=com_eschool&view=grades&layout=print&tmpl=component');?>" method="post" name="adminForm">
 	<?php $fullname = EschoolHelper::getNameTitle($this->items[0]->title).' '.$this->items[0]->first_name.' '.$this->items[0]->last_name;
 		$studentCode = $this->items[0]->student_code;
 	?> 
 	<fieldset>
-		<legend><?php echo $this->escape($fullname).' ['.$studentCode.']';?></legend>
+		<legend class="center"><?php echo $this->escape($fullname).' ['.$studentCode.']';?></legend>
 	</fieldset>
 
 	<table class="adminlist table table-striped">

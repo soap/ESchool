@@ -6,8 +6,6 @@ JHtml::_('behavior.tooltip');
 $user		= JFactory::getUser();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
-$print_url = JRoute::_('index.php?option=com_eschool&view=grades&tmpl=component&layout=print');
-$print_opt = 'width=1024,height=600,resizable=yes,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no';
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eschool&view=grades');?>" method="post" name="adminForm">
 	<fieldset id="filter-bar">
@@ -20,13 +18,9 @@ $print_opt = 'width=1024,height=600,resizable=yes,scrollbars=yes,toolbar=no,loca
 
 			<button type="submit" class="btn">
 				<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
-			<button type="button" class="btn" onclick="document.id('filter_search').value='';this.form.submit();">
+			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();">
 				<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
-			<?php if ($this->state->get('filter.regsemester', 0) > 0) :?>
-			<a class="btn button" id="print_btn" href="javascript:void(0);" onclick="window.open('<?php echo JRoute::_($print_url);?>', 'print', '<?php echo $print_opt; ?>')">
-                 <?php echo JText::_('COM_ESCHOOL_PRINT'); ?>
-            </a>
-            <?php endif;?>
+
 		</div>
 		<div class="filter-select fltrt">
 			<select name="filter_regsemester" class="inputbox" onchange="this.form.submit()">
@@ -34,20 +28,21 @@ $print_opt = 'width=1024,height=600,resizable=yes,scrollbars=yes,toolbar=no,loca
 				<?php echo JHtml::_('select.options', JHtml::_('regsemester.options'),
 					'value', 'text', $this->state->get('filter.regsemester'), true);?>
 			</select>
+			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'),
+					'value', 'text', $this->state->get('filter.published'), true);?>
+			</select>
 		</div>
 	</fieldset>
 	<div class="clr"> </div>
-	<?php $fullname = EschoolHelper::getNameTitle($this->items[0]->title).' '.$this->items[0]->first_name.' '.$this->items[0]->last_name;
-		$studentCode = $this->items[0]->student_code;
-	?> 
-	<fieldset>
-		<legend><?php echo $this->escape($fullname).' ['.$studentCode.']';?></legend>
-	</fieldset>
-
-	<table class="adminlist table table-striped">
+	<table class="adminlist table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th width="10%">
+				<th class="center">
+					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_FULLNAME', 'fullname', $listDirn, $listOrder); ?>
+				</th>
+				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_HEADING_SEMESTER', 'semester_title', $listDirn, $listOrder); ?>	
 				</th>
 				<th width="10%" class="center">
@@ -55,9 +50,6 @@ $print_opt = 'width=1024,height=600,resizable=yes,scrollbars=yes,toolbar=no,loca
 				</th>
 				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_HEADING_COURSE', 'course_title', $listDirn, $listOrder); ?>
-				</th>
-				<th width="10%" class="center">
-					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_HEADING_COURSE_TYPE', 'c.course_type', $listDirn, $listOrder);?>	
 				</th>
 				<th width="5%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SCORING_PROGRESS', 'a.scoring_progress', $listDirn, $listOrder); ?>					
@@ -67,6 +59,9 @@ $print_opt = 'width=1024,height=600,resizable=yes,scrollbars=yes,toolbar=no,loca
 				</th>
 				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_ESCHOOL_SCORING_GRADE', 'g.pointing', $listDirn, $listOrder); ?>
+				</th>
+				<th width="5%" class="center">
+					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.state', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
@@ -96,26 +91,36 @@ $print_opt = 'width=1024,height=600,resizable=yes,scrollbars=yes,toolbar=no,loca
 			$canChange	= $user->authorise('core.edit.state',	'com_eschool.grade.'.$item->id) && $canCheckin;
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
+				<td>
+					<?php $fullname = EschoolHelper::getNameTitle($item->title).' '.$item->first_name.' '.$item->last_name;?>
+					<?php echo $this->escape($fullname); ?>
+					<p class="smallsub">
+						<?php if (empty($item->note)) : ?>
+							<?php echo JText::sprintf('COM_ESCHOOL_LIST_CODE', $this->escape($item->student_code));?>
+						<?php else : ?>
+							<?php echo JText::sprintf('COM_ESCHOOL_LIST_CODE_NOTE', $this->escape($item->student_code), $this->escape($item->note));?>
+						<?php endif; ?></p>
+				</td>
 				<td class="center">
 					<?php echo $this->escape($item->semester_title)?>
 				</td>
 				<td class="center">
 					<?php echo $this->escape($item->course_code)?>
 				</td>
-				<td class="center">
+				<td  class="center">
 					<?php echo $item->course_title?>
 				</td>
-				<td class="center">
-					<?php echo EschoolHelper::getCourseTypeTitle($item->course_type)?>
-				</td>
-				<td class="center">
+				<td  class="center">
 					<?php echo $item->scoring_progress?>
 				</td>
-				<td class="center">
+				<td  class="center">
 					<?php echo $item->scoring_percent?>
 				</td>
-				<td class="center">
+				<td  class="center">
 					<?php echo $item->scoring_grade?>
+				</td>
+				<td class="center">
+					<?php echo JHtml::_('jgrid.published', $item->state, $i, 'grades.', $canChange); ?>
 				</td>
 				<td class="center">
 					<?php echo $this->escape($item->author_name); ?>
